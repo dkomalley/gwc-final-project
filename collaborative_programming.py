@@ -16,7 +16,7 @@ class Playlist:
         Args:
             playlist (list): a list of songs that are in a playlist.
         """
-def search_by_artist(self, artist):
+    def search_by_artist(self, artist):
         """function where the user can enter an artist's name and it will return every song by that artist that is downloaded on the iPod 
         
         Args:
@@ -25,3 +25,15 @@ def search_by_artist(self, artist):
         Returns:
         artist_songs(list)
         """
+
+    def view_all_songs(self, order = "Recently Added"):
+        """Returns all of the user's added songs in a specified order.
+        
+        Args:
+            order(str): the sort order to return the songs; 
+                    default is set to 'Recently Added'.
+            
+        Returns:
+            list: list of all added songs according to specified order.
+        """
+        
