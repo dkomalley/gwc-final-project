@@ -10,3 +10,12 @@ class Playlist:
         playlist_name ():
         sort_by ():
     """
+def search_by_artist(self, artist):
+        """function where the user can enter an artist's name and it will return every song by that artist that is downloaded on the iPod 
+        
+        Args:
+        artist(str)
+
+        Returns:
+        artist_songs(list)
+        """
