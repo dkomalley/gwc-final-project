@@ -36,4 +36,13 @@ class Playlist:
         Returns:
             list: list of all added songs according to specified order.
         """
+    
+    def delete_songs(self,song_title):
+        """Deletes songs off a playlist and returns the updated playlist.
+
+        Args:
+            song_title (string): name of song
         
+        Returns:
+            list: list of all songs on the playlist excluding the deleted songs
+        """
