@@ -60,3 +60,5 @@ class Playlist:
         Returns:
             list: list of all songs on the playlist excluding the deleted songs
         """
+        
+    def uploadSong():
