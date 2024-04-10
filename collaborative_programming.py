@@ -62,3 +62,4 @@ class Playlist:
         """
         
     def uploadSong(self, filepath):
+        """ Upload song function"""
