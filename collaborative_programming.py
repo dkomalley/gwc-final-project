@@ -1,3 +1,6 @@
+import csv
+from datetime import datetime
+
 """  A music library enabling users to manage songs, playlists, and perform 
         various functions using implemented code structures, supported by 
         CSV data storage. """
@@ -51,6 +54,29 @@ class Playlist:
             list: list of all added songs according to specified order.
         """
     
+    def uploadSong(self, filepath, song_title, artist, genre, duration=None, release=None):
+        if not release:
+            release = datetime.now().strftime('%Y-%m-%d')
+            
+        if duration and ':' in duration:
+            parts = duration.split(':')
+            minutes = int(parts[0])
+            seconds = int(parts[1])
+            duration_seconds = minutes * 60 + seconds
+        else:
+            duration_seconds = duration
+            
+        try:
+            with open(filepath, 'a', newline='', encoding='utf-8') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow([song_title, artist, genre, duration_seconds, release])
+            return True
+        except Exception as e:
+            print(f"Error uploading song: {e}")
+            return False
+            
+        
+    
     def delete_songs(self,song_title):
         """Deletes songs off a playlist and returns the updated playlist.
 
@@ -61,5 +87,4 @@ class Playlist:
             list: list of all songs on the playlist excluding the deleted songs
         """
         
-    def uploadSong(self, filepath):
-        """ Upload song function"""
+        
