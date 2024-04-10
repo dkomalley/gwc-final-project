@@ -20,7 +20,8 @@ class Playlist:
             playlist (list): a list of songs that are in a playlist.
         """
     def search_by_artist(filepath, user_artist):
-        """function where the user can enter an artist's name and it will return every song by that artist that is downloaded on the iPod 
+        """function where the user can enter an artist's name and it will return
+        every song by that artist that is downloaded on the iPod 
         
         Args:
         artist(str)
@@ -54,9 +55,33 @@ class Playlist:
             list: list of all added songs according to specified order.
         """
     
-    def uploadSong(self, filepath, song_title, artist, genre, duration=None, release=None):
-        if not release:
-            release = datetime.now().strftime('%Y-%m-%d')
+    def uploadSong(self, filepath, song_title, artist, genre, \
+            duration=None, release=None):
+        """Uploads song details to an 'iPod' represented by a CSV file.
+
+        Args:
+            filepath (str): the path to the CSV file representing the iPod.
+            song_title (str): the title of the song.
+            artist (str): the artist of the song.
+            genre (str): the genre of the song.
+            duration (str, optional): the duration of the song in the 
+                format 'mm:ss'. Defaults to None.
+            release (str, optional): the release date of the song. Defaults 
+                to None.
+
+        Returns:
+            bool: True if the song details were sucessfully uploaded, and False
+                otherwise.
+                
+        Side effects:
+            modifies the CSV file specified by filepath to include details of 
+                the uploaded song
+            if duration is provided and in the format 'mm:ss', it calculates 
+                the duration in seconds and updates the duration_seconds 
+                variable accordingly.
+            if an error occurs during the upload process, it prints and error 
+                message.
+        """
             
         if duration and ':' in duration:
             parts = duration.split(':')
@@ -69,14 +94,14 @@ class Playlist:
         try:
             with open(filepath, 'a', newline='', encoding='utf-8') as csvfile:
                 writer = csv.writer(csvfile)
-                writer.writerow([song_title, artist, genre, duration_seconds, release])
+                writer.writerow([song_title, artist, genre, \
+                    duration_seconds, release])
             return True
         except Exception as e:
             print(f"Error uploading song: {e}")
             return False
-            
         
-    
+        
     def delete_songs(self,song_title):
         """Deletes songs off a playlist and returns the updated playlist.
 
