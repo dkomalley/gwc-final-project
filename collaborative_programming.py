@@ -61,4 +61,4 @@ class Playlist:
             list: list of all songs on the playlist excluding the deleted songs
         """
         
-    def uploadSong():
+    def uploadSong(self, filepath):
