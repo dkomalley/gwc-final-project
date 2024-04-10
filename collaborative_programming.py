@@ -16,7 +16,7 @@ class Playlist:
         Args:
             playlist (list): a list of songs that are in a playlist.
         """
-    def search_by_artist(self, artist):
+    def search_by_artist(filepath, user_artist):
         """function where the user can enter an artist's name and it will return every song by that artist that is downloaded on the iPod 
         
         Args:
@@ -25,7 +25,21 @@ class Playlist:
         Returns:
         artist_songs(list)
         """
-
+        
+        songs_by_artist = []
+        with open(filepath, "r", encoding = "utf-8") as f:
+            for line in f:
+                songs = line.strip().split(",")
+                artist = songs[1]
+                if user_artist in songs[1]:
+                    songs_by_artist.append(songs[0])
+                    
+            if user_artist not in songs[1]:
+                    print(f"There are no songs by {user_artist} downloaded.")
+        return songs_by_artist
+        
+    search_by_artist("songs.csv", "Justin Bieber")
+    
     def view_all_songs(self, order = "Recently Added"):
         """Returns all of the user's added songs in a specified order.
         
