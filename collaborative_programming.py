@@ -23,7 +23,7 @@ class Playlist:
         artist(str)
 
         Returns:
-        artist_songs(list)
+        songs_by_artsit(list)
         """
         
         songs_by_artist = []
@@ -39,7 +39,7 @@ class Playlist:
         return songs_by_artist
         
     search_by_artist("songs.csv", "Justin Bieber")
-    
+
     def view_all_songs(self, order = "Recently Added"):
         """Returns all of the user's added songs in a specified order.
         
