@@ -1,5 +1,7 @@
 import pandas as pd
 from datetime import datetime
+import csv
+import argparse
 
 """  A music library enabling users to manage songs, playlists, and perform 
         various functions using implemented code structures, supported by 
@@ -13,6 +15,9 @@ class Playlist:
         playlist_name ():
         sort_by ():
     """
+    def __init__(self, playlist_path):
+        self.playlist_path = playlist_path
+        
     def shuffle_playlist(self, playlist):
         """A method that will take a playlist and shuffle the order of the songs.
 
@@ -137,5 +142,42 @@ class Playlist:
         Returns:
             list: list of all songs on the playlist excluding the deleted songs
         """
-        
-        
+        updated_playlist = []
+        song_found = False
+        with open(self.playlist_path, mode='r', encoding='utf-8') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                #to account for double quotes in csv file
+                csv_song_title = row[0].strip().replace('“', '').replace('”', '').replace('"', '').lower()
+                input_song_title = song_title.strip().replace('“', '').replace('”', '').replace('"', '').lower()
+                if csv_song_title != input_song_title:
+                    updated_playlist.append(row)
+                else:
+                    song_found = True
+
+        if song_found:
+            print(f"'{song_title}' found and deleted.")
+        else:
+            print(f"'{song_title}' not found in the playlist.")
+
+        with open(self.playlist_path, mode='w', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerows(updated_playlist)
+
+        return updated_playlist
+
+def main():
+    parser = argparse.ArgumentParser(description="Deletes a song from a playlist.")
+    parser.add_argument("song_title", help="The title of the song to delete.")
+    parser.add_argument("--playlist_path", default="playlist.csv", help="The path to the playlist CSV file.")
+    args = parser.parse_args()
+
+    playlist_manager = Playlist(args.playlist_path)
+    updated_playlist = playlist_manager.delete_songs(args.song_title)
+
+    print(f"Updated playlist after deleting \"{args.song_title}\":")
+    for song in updated_playlist:
+        print(song)
+
+if __name__ == "__main__":
+    main()
