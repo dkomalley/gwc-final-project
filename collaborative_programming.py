@@ -1,4 +1,4 @@
-import csv
+import pandas as pd
 from datetime import datetime
 
 """  A music library enabling users to manage songs, playlists, and perform 
@@ -57,10 +57,11 @@ class Playlist:
     
     def uploadSong(self, filepath, song_title, artist, genre, \
             duration=None, release=None):
-        """Uploads song details to an 'iPod' represented by a CSV file.
+        """Uploads song details to a playlist in an iPod represented by a CSV
+            file using Pandas.
 
         Args:
-            filepath (str): the path to the CSV file representing the iPod.
+            filepath (str): the path to the CSV file representing the playlist.
             song_title (str): the title of the song.
             artist (str): the artist of the song.
             genre (str): the genre of the song.
@@ -75,7 +76,7 @@ class Playlist:
                 
         Side effects:
             modifies the CSV file specified by filepath to include details of 
-                the uploaded song
+                the uploaded song.
             if duration is provided and in the format 'mm:ss', it calculates 
                 the duration in seconds and updates the duration_seconds 
                 variable accordingly.
@@ -83,23 +84,48 @@ class Playlist:
                 message.
         """
             
-        if duration and ':' in duration:
-            parts = duration.split(':')
-            minutes = int(parts[0])
-            seconds = int(parts[1])
-            duration_seconds = minutes * 60 + seconds
-        else:
-            duration_seconds = duration
+        duration_seconds = None
+        if duration:
+            if ':' in duration:
+                try:
+                    minutes, seconds = [int(part) for part in \
+                        duration.split(':')]
+                    duration_seconds = minutes * 60 + seconds
+                except ValueError:
+                    pass
+            else:
+                pass
             
         try:
-            with open(filepath, 'a', newline='', encoding='utf-8') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerow([song_title, artist, genre, \
-                    duration_seconds, release])
+            existing_data = pd.read_csv(filepath)
+            
+            new_song_information = pd.DataFrame([[song_title, artist, genre, \
+                duration_seconds, release]], columns = ["Song Title", \
+                    "Artist", "Genre", "Duration", "Release"])
+            
+            updated_data = pd.concat([existing_data, new_song_information], \
+                ignore_index=True)
+            
+            updated_data.to_csv(filepath, index=False)
             return True
         except Exception as e:
             print(f"Error uploading song: {e}")
             return False
+        
+    # Example:
+    def upload_song_to_playlist(self):
+        playlist = Playlist()
+        
+        song_title = "Stereo Love (Radio Edit)"
+        artist = "Edward Maya & Vika Jigulina"
+        genre = "Dance"
+        duration = "185"
+        release = datetime.now().date()
+        
+        confirmation_message = playlist.uploadSong("songs.csv", song_title, \
+            artist, genre, duration, release)
+        
+        print(confirmation_message)
         
         
     def delete_songs(self,song_title):
