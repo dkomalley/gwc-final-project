@@ -16,8 +16,8 @@ class Playlist:
         playlist_name ():
         sort_by ():
     """
-    def __init__(self, playlist_path):
-        self.playlist_path = playlist_path
+    def __init__(self, filepath):
+        self.filepath = filepath
         
     
     def uploadSong(self, filepath, song_title, artist, genre, \
@@ -107,7 +107,7 @@ class Playlist:
         """
         updated_playlist = []
         song_found = False
-        with open(self.playlist_path, mode='r', encoding='utf-8') as file:
+        with open(self.filepath, mode='r', encoding='utf-8') as file:
             reader = csv.reader(file)
             for row in reader:
                 #to account for double quotes in csv file
@@ -123,7 +123,7 @@ class Playlist:
         else:
             print(f"'{song_title}' not found in the playlist.")
 
-        with open(self.playlist_path, mode='w', encoding='utf-8') as file:
+        with open(self.filepath, mode='w', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerows(updated_playlist)
 
