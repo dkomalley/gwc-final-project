@@ -168,7 +168,9 @@ def shuffle_songs(filepath):
                 shuffled_songs.append(song)
         
         return shuffle(shuffled_songs)
-    
+
+shuffle_songs("songs.csv")
+
 def main():
     parser = argparse.ArgumentParser(description="Deletes a song from a playlist.")
     parser.add_argument("song_title", help="The title of the song to delete.")
