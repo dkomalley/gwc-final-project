@@ -180,33 +180,11 @@ class Playlist:
                         print(f"There are no songs by {user_artist} downloaded.")
             return songs_by_artist
             
-    #search_by_artist("songs.csv", "Justin Bieber")
+    search_by_artist("songs.csv", "Justin Bieber")
 
     def shuffle_songs(filepath):
-            """A method that will take a playlist from a file and shuffle the order of the songs.
+        """A method that will take a playlist from a file and shuffle the order of the songs.
 
-<<<<<<< HEAD
-            Args:
-                filepath (str): the name of the filepath with the songs that need to 
-                be shuffled. 
-            Returns:
-                list: returns a list of the songs in the filepath shuffled, using 
-                the shuffle function from the random module.
-            """
-            shuffled_songs = []
-            with open(filepath, "r") as f:
-                for line in f:
-                    songs = line.strip().split(',')
-                    song = songs[0]
-                    shuffled_songs.append(song)
-            
-            return shuffle(shuffled_songs)
-    
-def main():
-    parser = argparse.ArgumentParser(description="Deletes a song from a playlist.")
-    parser.add_argument("song_title", help="The title of the song to delete.")
-    parser.add_argument("--playlist_path", help="The path to the playlist CSV file.")
-=======
         Args:
             filepath (str): the name of the filepath with the songs that need to 
             be shuffled. 
@@ -224,13 +202,12 @@ def main():
         
         return shuffled_songs
 
-shuffle_songs("songs.csv")
+    shuffle_songs("songs.csv")
 
 def main():
     parser = argparse.ArgumentParser(description="Deletes a song from a playlist.")
     parser.add_argument("song_title", help="The title of the song to delete.")
     parser.add_argument("--filepath", default="playlist.csv", help="The path to the playlist CSV file.")
->>>>>>> 268d3149856d995fbd7383ca48871e1d3208fb8a
     args = parser.parse_args()
 
     playlist_manager = Playlist(args.filepath)
