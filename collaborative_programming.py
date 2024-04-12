@@ -97,42 +97,33 @@ class Playlist:
                         duration.split(':')]
                     duration_seconds = minutes * 60 + seconds
                 except ValueError:
-                    pass
+                    print("Invalid duration format. Please use 'mm:ss'.")
+                    return False
             else:
-                pass
+                print("Invalid duration format. Please use 'mm:ss'.")
+                return False
             
         try:
             existing_data = pd.read_csv(filepath)
+        except FileNotFoundError:
+            print("Error: File not found.")
+            return False
+        
+        new_song_data = [song_title, artist, genre, \
+                duration_seconds, release]
+        new_song_df = pd.DataFrame([new_song_data], \
+                columns=existing_data.columns)
             
-            new_song_information = pd.DataFrame([[song_title, artist, genre, \
-                duration_seconds, release]], columns = ["Song Title", \
-                    "Artist", "Genre", "Duration", "Release"])
-            
-            updated_data = pd.concat([existing_data, new_song_information], \
+        updated_data = pd.concat([existing_data, new_song_df], \
                 ignore_index=True)
             
+        try:
             updated_data.to_csv(filepath, index=False)
             return True
         except Exception as e:
             print(f"Error uploading song: {e}")
             return False
-        
-    # Example:
-    def upload_song_to_playlist(self):
-        playlist = Playlist()
-        
-        song_title = "Stereo Love (Radio Edit)"
-        artist = "Edward Maya & Vika Jigulina"
-        genre = "Dance"
-        duration = "185"
-        release = datetime.now().date()
-        
-        confirmation_message = playlist.uploadSong("songs.csv", song_title, \
-            artist, genre, duration, release)
-        
-        print(confirmation_message)
-        
-        
+              
     def delete_songs(self,song_title):
         """Deletes songs off a playlist and returns the updated playlist.
 
