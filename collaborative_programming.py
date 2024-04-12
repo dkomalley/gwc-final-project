@@ -9,15 +9,11 @@ from random import shuffle
         CSV data storage. """
 
 class Playlist:
-    """ Represents the music library where users can create their own playlist.
-    
-    Attributes:
-        song ():
-        playlist_name ():
-        sort_by ():
+    """Represents the music library where users can create their own playlist.
     """
-    def __init__(self, playlist_path):
-        self.playlist_path = playlist_path
+    
+    def __init__(self, filepath):
+        self.filepath = filepath
         
     
     def uploadSong(self, filepath, song_title, artist, genre, \
@@ -155,7 +151,7 @@ class Playlist:
         else:
             print(f"'{song_title}' not found in the playlist.")
 
-        with open(self.playlist_path, mode='w', encoding='utf-8') as file:
+        with open(self.filepath, mode='w', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerows(updated_playlist)
 
@@ -189,6 +185,7 @@ class Playlist:
     def shuffle_songs(filepath):
             """A method that will take a playlist from a file and shuffle the order of the songs.
 
+<<<<<<< HEAD
             Args:
                 filepath (str): the name of the filepath with the songs that need to 
                 be shuffled. 
@@ -209,9 +206,34 @@ def main():
     parser = argparse.ArgumentParser(description="Deletes a song from a playlist.")
     parser.add_argument("song_title", help="The title of the song to delete.")
     parser.add_argument("--playlist_path", help="The path to the playlist CSV file.")
+=======
+        Args:
+            filepath (str): the name of the filepath with the songs that need to 
+            be shuffled. 
+        Returns:
+            list: returns a list of the songs in the filepath shuffled, using 
+            the shuffle function from the random module.
+        """
+        shuffled_songs = []
+        with open(filepath, "r") as f:
+            for line in f:
+                songs = line.strip().split(',')
+                song = songs[0]
+                shuffled_songs.append(song)
+                shuffle(shuffled_songs)
+        
+        return shuffled_songs
+
+shuffle_songs("songs.csv")
+
+def main():
+    parser = argparse.ArgumentParser(description="Deletes a song from a playlist.")
+    parser.add_argument("song_title", help="The title of the song to delete.")
+    parser.add_argument("--filepath", default="playlist.csv", help="The path to the playlist CSV file.")
+>>>>>>> 268d3149856d995fbd7383ca48871e1d3208fb8a
     args = parser.parse_args()
 
-    playlist_manager = Playlist(args.playlist_path)
+    playlist_manager = Playlist(args.filepath)
     updated_playlist = playlist_manager.delete_songs(args.song_title)
 
     print(f"Updated playlist after deleting \"{args.song_title}\":")
