@@ -176,10 +176,10 @@ def shuffle_songs(filepath):
 def main():
     parser = argparse.ArgumentParser(description="Deletes a song from a playlist.")
     parser.add_argument("song_title", help="The title of the song to delete.")
-    parser.add_argument("--playlist_path", default="playlist.csv", help="The path to the playlist CSV file.")
+    parser.add_argument("--filepath", default="playlist.csv", help="The path to the playlist CSV file.")
     args = parser.parse_args()
 
-    playlist_manager = Playlist(args.playlist_path)
+    playlist_manager = Playlist(args.filepath)
     updated_playlist = playlist_manager.delete_songs(args.song_title)
 
     print(f"Updated playlist after deleting \"{args.song_title}\":")
