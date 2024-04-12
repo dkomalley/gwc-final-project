@@ -130,14 +130,14 @@ class Playlist:
         return updated_playlist
 
 def search_by_artist(filepath, user_artist):
-        """function where the user can enter an artist's name and it will return
-        every song by that artist that is downloaded on the iPod 
+        """Function where the user can enter an artist's name and it will return
+        every song by that artist that is downloaded on the iPod.
         
         Args:
-        artist(str)
+        user_artist(str)
 
         Returns:
-        artist_songs(list)
+        songs_by_artist(list)
         """
         
         songs_by_artist = []
