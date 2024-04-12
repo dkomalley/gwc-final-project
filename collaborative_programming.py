@@ -198,8 +198,8 @@ class Playlist:
                 songs = line.strip().split(',')
                 song = songs[0]
                 shuffled_songs.append(song)
-                shuffle(shuffled_songs)
         
+        shuffle(shuffled_songs)    
         return shuffled_songs
 
     shuffle_songs("songs.csv")
