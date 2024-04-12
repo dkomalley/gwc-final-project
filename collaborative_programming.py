@@ -9,13 +9,9 @@ from random import shuffle
         CSV data storage. """
 
 class Playlist:
-    """ Represents the music library where users can create their own playlist.
-    
-    Attributes:
-        song ():
-        playlist_name ():
-        sort_by ():
+    """Represents the music library where users can create their own playlist.
     """
+    
     def __init__(self, filepath):
         self.filepath = filepath
         
