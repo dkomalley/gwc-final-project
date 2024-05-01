@@ -15,7 +15,7 @@ class Playlist:
     
     def __init__(self, filepath):
         self.filepath = filepath
-        self.now_playing_song = None
+        self.now_playing_song = {}
         self.new_data = None
         
     
@@ -88,12 +88,13 @@ class Playlist:
             with open(self.filepath, "r", encoding="utf-8") as f:
                 reader = csv.reader(f)
                 for song in reader:
-                    csv_title = self.sanitize_csv_value(song[0])
-                    if csv_title.lower() == song_title.lower().strip():
+                    csv_title = song[0].strip().lower()
+                    if csv_title  == song_title.lower().strip():
                         self.now_playing_song = {}
-                        keys = ['Title', 'Artist', 'Genre', 'Duration', 'Release']
+                        keys = ['Title', 'Artist', 'Genre', 'Duration', \
+                            'Release']
                         for i in range(len(keys)):
-                            self.now_playing_song[keys[i]] = self.sanitize_csv_value(song[i])
+                            self.now_playing_song[keys[i]] = song[i].strip()
                         now_playing = self.display_now_playing()
                         return now_playing
                 return "Song not found."
@@ -102,14 +103,11 @@ class Playlist:
         except Exception as e:
             return f"Error: {e}"
 
-    def sanitize_csv_value(self, value):
-        """Cleans CSV string values by stripping whitespace and replacing typographic quotes."""
-        return value.strip().replace('“', '').replace('”', '').replace('"', '')
-
     def display_now_playing(self):
         """Displays details of the currently playing song."""
         if self.now_playing_song:
-            return (f"Now playing: '{self.now_playing_song['Title']}' by {self.now_playing_song['Artist']}"
+            return (f"Now playing: '{self.now_playing_song['Title']}' by " 
+                    f"{self.now_playing_song['Artist']} "
                     f" from the genre {self.now_playing_song['Genre']}."
                     f" Duration: {self.now_playing_song['Duration']} seconds,"
                     f" released on {self.now_playing_song['Release']}.")
