@@ -119,8 +119,6 @@ class Playlist:
             release = df.sort_values('Release')
             
             return release["Title"]
-                   
-        
                   
     def delete_songs(self, song_title):
         """Deletes songs off a playlist and returns the updated playlist.
@@ -154,54 +152,6 @@ class Playlist:
             writer.writerows(updated_playlist)
 
         return updated_playlist
-
-    def search_by_artist(filepath, user_artist):
-            """Function where the user can enter an artist's name and it will 
-            return every song by that artist that is downloaded on the iPod.
-            
-            Args:
-            user_artist(str)
-
-            Returns:
-            songs_by_artist(list)
-            """
-            
-            songs_by_artist = []
-            with open(filepath, "r", encoding = "utf-8") as f:
-                for line in f:
-                    songs = line.strip().split(",")
-                    artist = songs[1]
-                    if user_artist in songs[1]:
-                        songs_by_artist.append(songs[0])
-                        
-                if user_artist not in songs[1]:
-                        print(f"There are no songs by {user_artist} downloaded.")
-            return songs_by_artist
-            
-    search_by_artist("songs.csv", "Justin Bieber")
-
-    def shuffle_songs(filepath):
-        """A method that will take a playlist from a file and shuffle the order 
-            of the songs.
-
-        Args:
-            filepath (str): the name of the filepath with the songs that need to 
-            be shuffled. 
-        Returns:
-            list: returns a list of the songs in the filepath shuffled, using 
-            the shuffle function from the random module.
-        """
-        shuffled_songs = []
-        with open(filepath, "r") as f:
-            for line in f:
-                songs = line.strip().split(',')
-                song = songs[0]
-                shuffled_songs.append(song)
-        
-        shuffle(shuffled_songs)    
-        return shuffled_songs
-
-    shuffle_songs("songs.csv")
     
     def play_song(self, song_title):
         """Attempts to find and play a song by its title from a CSV file.
@@ -238,18 +188,6 @@ class Playlist:
         except Exception as e:
             return f"Error: {e}"
 
-    def sanitize_csv_value(self, value):
-        """Cleans CSV string values by stripping any whitespaces and replacing 
-            typographic quotes.
-
-        Args:
-            value (str): the CSV string value to be sanitized/cleaned.
-
-        Returns:
-            str: the sanitized/cleaned string value.
-        """
-        return value.strip().replace('“', '').replace('”', '').replace('"', '')
-
     def display_now_playing(self):
         """Displays the details of the song that is currently playing.
 
@@ -268,6 +206,54 @@ class Playlist:
             )
         else:
             return "No song is currently playing."
+
+def search_by_artist(filepath, user_artist):
+            """Function where the user can enter an artist's name and it will 
+            return every song by that artist that is downloaded on the iPod.
+            
+            Args:
+            user_artist(str)
+
+            Returns:
+            songs_by_artist(list)
+            """
+            
+            songs_by_artist = []
+            with open(filepath, "r", encoding = "utf-8") as f:
+                for line in f:
+                    songs = line.strip().split(",")
+                    artist = songs[1]
+                    if user_artist in songs[1]:
+                        songs_by_artist.append(songs[0])
+                        
+                if user_artist not in songs[1]:
+                        print(f"There are no songs by {user_artist} downloaded.")
+            return songs_by_artist
+            
+search_by_artist("songs.csv", "Justin Bieber")
+
+def shuffle_songs(filepath):
+        """A method that will take a playlist from a file and shuffle the order 
+            of the songs.
+
+        Args:
+            filepath (str): the name of the filepath with the songs that need to 
+            be shuffled. 
+        Returns:
+            list: returns a list of the songs in the filepath shuffled, using 
+            the shuffle function from the random module.
+        """
+        shuffled_songs = []
+        with open(filepath, "r") as f:
+            for line in f:
+                songs = line.strip().split(',')
+                song = songs[0]
+                shuffled_songs.append(song)
+        
+        shuffle(shuffled_songs)    
+        return shuffled_songs
+
+shuffle_songs("songs.csv")
 
 def main():
     parser = argparse.ArgumentParser(description="Deletes a song from a playlist.")
