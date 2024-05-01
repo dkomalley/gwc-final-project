@@ -61,22 +61,27 @@ class Playlist:
             print("Error: File not found.")
             return False
         
+        if 'Release' not in existing_data.columns:
+            print("Error: 'Release' column not found in the CSV file.")
+            return False
+        
         new_song_data = [song_title, artist, genre, \
                 duration_seconds, release]
-        new_song_df = pd.DataFrame([new_song_data], \
-            columns=existing_data.columns)
+        
+        columns = existing_data.columns
+        new_song_df = pd.DataFrame([new_song_data], columns=columns)
         
             
         updated_data = pd.concat([existing_data, new_song_df], \
                 ignore_index=True)
-        updated_data['Release'] = pd.to_datetime(updated_data['Release'])
+        updated_data['Release'] \
+            = pd.to_datetime(updated_data['Release'])
         
             
         try:
             updated_data.to_csv(self.filepath, index=False)
             self.new_data = updated_data
            
-            
             return True
         except Exception as e:
             print(f"Error uploading song: {e}")
