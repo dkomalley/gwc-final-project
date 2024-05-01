@@ -199,33 +199,7 @@ class Playlist:
         return updated_playlist
         # Should we instead return the updated dataframe instead of the list? - BT
     
-    def search_by_artist(self, user_artist):
-            """Function where the user can enter an artist's name and it will return
-            every song by that artist that is downloaded on the iPod.
 
-            Args:
-            user_artist(str)
-
-            Returns:
-            songs_by_artist(list)
-            """
-
-            songs_by_artist = []
-        
-            with open(self.filepath, "r", encoding = "utf-8") as f:
-                reader = csv.reader(f)
-                for row in reader:
-                    if row[0] == 'Title':
-                        continue 
-                    songs = row
-                    artist = songs[1]
-                    if user_artist == artist:
-                        songs_by_artist.append(songs[0])
-
-                if songs_by_artist == []:
-                    return f"There are no songs by {user_artist} downloaded."
-            return songs_by_artist
-    
     def shuffle_songs(self):
             """A method that will take a playlist from a file and shuffle the order of the songs.
 
@@ -253,7 +227,32 @@ class Playlist:
         
         return bar
                 
-                
+def songs_per_artist(filepath):
+    """
+    Counts the number of songs by each artist stored on the iPod
+
+    Args:
+    filepath(str): Path to CSV file containing information about each song
+
+    Returns:
+    dict: A dictionary where the keys are the artist and the values are the number of songs they have on the iPod
+    """
+    with open(filepath, "r", encoding = "utf-8") as f:
+            #Use list comprehension to extract artist values from the csv
+            artists = [line.strip().split(",")[1] for line in f]
+
+    #Counting the number of each song on the iPod written by each aritst using a dictionary comprehension
+            songs_artist_dict = {artist: artists.count(artist) for artist in set(artists)}
+        
+    
+
+    for artist, count in  songs_artist_dict.items():
+        print(f"{artist}: {count} song/s")
+        
+songs_per_artist("songs.csv")
+
+
+                              
 
 
 def main():
