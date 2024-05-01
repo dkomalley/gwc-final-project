@@ -3,6 +3,7 @@ from datetime import datetime
 import csv
 import argparse
 from random import shuffle
+from matplotlib import pyplot as plt
 
 """  A music library enabling users to manage songs, playlists, and perform 
         various functions using implemented code structures, supported by 
@@ -46,13 +47,19 @@ class Playlist:
                 message.
         """
             
-        try:
-            duration_seconds = int(duration.split(':')[0]) * 60 + \
-                int(duration.split(':')[1]) if duration and ':' in duration \
-                    else None
-        except ValueError:
-            print("Invalid duration format. Please use 'mm:ss'.")
-            return False
+        duration_seconds = None
+        if duration:
+            if ':' in duration:
+                try:
+                    minutes, seconds = [int(part) for part in \
+                        duration.split(':')]
+                    duration_seconds = minutes * 60 + seconds
+                except ValueError:
+                    print("Invalid duration format. Please use 'mm:ss'.")
+                    return False
+            else:
+                print("Invalid duration format. Please use 'mm:ss'.")
+                return False
             
         try:
             existing_data = pd.read_csv(self.filepath)
@@ -63,22 +70,59 @@ class Playlist:
         new_song_data = [song_title, artist, genre, \
                 duration_seconds, release]
         new_song_df = pd.DataFrame([new_song_data], \
-                columns=existing_data.columns)
+            columns=existing_data.columns)
+        
             
         updated_data = pd.concat([existing_data, new_song_df], \
                 ignore_index=True)
         updated_data['Release'] = pd.to_datetime(updated_data['Release'])
+        
             
         try:
             updated_data.to_csv(self.filepath, index=False)
             self.new_data = updated_data
+           
+            
             return True
-        
         except Exception as e:
             print(f"Error uploading song: {e}")
             return False
-    
-    
+        
+    def play_song(self, song_title):
+        """Attempts to find and play a song by title from a CSV file."""
+        try:
+            with open(self.filepath, "r", encoding="utf-8") as f:
+                reader = csv.reader(f)
+                for song in reader:
+                    csv_title = self.sanitize_csv_value(song[0])
+                    if csv_title.lower() == song_title.lower().strip():
+                        self.now_playing_song = {}
+                        keys = ['Title', 'Artist', 'Genre', 'Duration', 'Release']
+                        for i in range(len(keys)):
+                            self.now_playing_song[keys[i]] = self.sanitize_csv_value(song[i])
+                        now_playing = self.display_now_playing()
+                        return now_playing
+                return "Song not found."
+        except FileNotFoundError:
+            return f"Couldn't find the file '{self.filepath}'."
+        except Exception as e:
+            return f"Error: {e}"
+
+    def sanitize_csv_value(self, value):
+        """Cleans CSV string values by stripping whitespace and replacing typographic quotes."""
+        return value.strip().replace('“', '').replace('”', '').replace('"', '')
+
+    def display_now_playing(self):
+        """Displays details of the currently playing song."""
+        if self.now_playing_song:
+            return (f"Now playing: '{self.now_playing_song['Title']}' by {self.now_playing_song['Artist']}"
+                    f" from the genre {self.now_playing_song['Genre']}."
+                    f" Duration: {self.now_playing_song['Duration']} seconds,"
+                    f" released on {self.now_playing_song['Release']}.")
+        else:
+            return "No song is currently playing."
+  
+   
     def view_all_songs(self, order = "Recently Added"):
         """Returns all of the user's added songs in a specified order.
         
@@ -89,38 +133,22 @@ class Playlist:
         Returns:
             list: list of all added songs according to specified order.
         """
-               
-        title = []
-        artist = []
-        genre = []
-        duration = []
-        release = []
-        for line in f:
-            
-            data = line.strip().split(", ")
-            title.append(data[0])
-            artist.append(data[1])
-            genre.append(data[2])
-            duration.append(data[3])
-            release.append(data[-1])
-            
-        dict = {'Title': title, 'Artist': artist, \
-                'Genre': genre, 'Duration': duration, \
-                'Release': release}
-        df = pd.DataFrame(dict)
-
+        
+        
         if order == "Recently Added":
-            recent = df.sort_index(ascending = False)
+            recent = self.new_data.sort_index(ascending = False)
             return recent['Title']
+        
         elif order == "Alphabetical":
-            alpha = df.sort_values('Title')
+            alpha = self.new_data.sort_values('Title')
             return alpha['Title']
         elif order == "Release Year":
-            release = df.sort_values('Release')
-            
-            return release["Title"]
-                  
-    def delete_songs(self, song_title):
+            release = self.new_data.sort_values('Release')
+
+            return release['Title']
+                   
+                
+    def delete_songs(self,song_title):
         """Deletes songs off a playlist and returns the updated playlist.
 
         Args:
@@ -135,13 +163,14 @@ class Playlist:
             reader = csv.reader(file)
             for row in reader:
                 #to account for double quotes in csv file
+                #UPDATE ON ABOVE: most likely will not need as I've edited the file manually to remove them - BT
                 csv_song_title = row[0].strip().replace('“', '').replace('”', '').replace('"', '').lower()
                 input_song_title = song_title.strip().replace('“', '').replace('”', '').replace('"', '').lower()
                 if csv_song_title != input_song_title:
                     updated_playlist.append(row)
                 else:
                     song_found = True
-
+        #When returning data from this function, we maybe should only return whether or not the song was deleted
         if song_found:
             print(f"'{song_title}' found and deleted.")
         else:
@@ -152,108 +181,64 @@ class Playlist:
             writer.writerows(updated_playlist)
 
         return updated_playlist
+        # Should we instead return the updated dataframe instead of the list? - BT
     
-    def play_song(self, song_title):
-        """Attempts to find and play a song by its title from a CSV file.
+    def search_by_artist(self, user_artist):
+            """Function where the user can enter an artist's name and it will return
+            every song by that artist that is downloaded on the iPod.
 
-        Args:
-            song_title (str): the title of the song that is going to be played.
-
-        Returns:
-            str: a message indicating the details about the currently playing
-                song if applicable, or a message indicating that the song was
-                not found.
-        
-        Side effects:
-            modifies the 'now_playing_song' attribute with the details of the
-                song that was found.
-        """
-        try:
-            with open(self.filepath, "r", encoding="utf-8") as f:
-                reader = csv.reader(f)
-                for song in reader:
-                    csv_song_title = self.sanitize_csv_value(song[0])
-                    if csv_song_title.lower() == song_title.lower().strip():
-                        self.now_playing_song = {}
-                        keys = ['Title', 'Artist', 'Genre', 'Duration', \
-                            'Release']
-                        for i in range(len(keys)):
-                            self.now_playing_song[keys[i]] = \
-                                self.sanitize_csv_value(song[i])
-                        now_playing = self.display_now_playing()
-                        return now_playing
-                return "Song not found."
-        except FileNotFoundError:
-            return f"Couldn't find the file '{self.filepath}'."
-        except Exception as e:
-            return f"Error: {e}"
-
-    def display_now_playing(self):
-        """Displays the details of the song that is currently playing.
-
-        Returns:
-            str: a message that indicates the details of the song that is 
-                currently being played, or a message indicating that no song is
-                currently playing.
-        """
-        if self.now_playing_song:
-            return (
-                f"Now playing: '{self.now_playing_song['Title']}' by "
-                f"{self.now_playing_song['Artist']} from the genre "
-                f"{self.now_playing_song['Genre']}. Duration: "
-                f"{self.now_playing_song['Duration']} seconds, released on "
-                f"{self.now_playing_song['Release']}."
-            )
-        else:
-            return "No song is currently playing."
-
-def search_by_artist(filepath, user_artist):
-            """Function where the user can enter an artist's name and it will 
-            return every song by that artist that is downloaded on the iPod.
-            
             Args:
             user_artist(str)
 
             Returns:
             songs_by_artist(list)
             """
-            
+
             songs_by_artist = []
-            with open(filepath, "r", encoding = "utf-8") as f:
-                for line in f:
-                    songs = line.strip().split(",")
-                    artist = songs[1]
-                    if user_artist in songs[1]:
-                        songs_by_artist.append(songs[0])
-                        
-                if user_artist not in songs[1]:
-                        print(f"There are no songs by {user_artist} downloaded.")
-            return songs_by_artist
-            
-search_by_artist("songs.csv", "Justin Bieber")
-
-def shuffle_songs(filepath):
-        """A method that will take a playlist from a file and shuffle the order 
-            of the songs.
-
-        Args:
-            filepath (str): the name of the filepath with the songs that need to 
-            be shuffled. 
-        Returns:
-            list: returns a list of the songs in the filepath shuffled, using 
-            the shuffle function from the random module.
-        """
-        shuffled_songs = []
-        with open(filepath, "r") as f:
-            for line in f:
-                songs = line.strip().split(',')
-                song = songs[0]
-                shuffled_songs.append(song)
         
-        shuffle(shuffled_songs)    
-        return shuffled_songs
+            with open(self.filepath, "r", encoding = "utf-8") as f:
+                reader = csv.reader(f)
+                for row in reader:
+                    if row[0] == 'Title':
+                        continue 
+                    songs = row
+                    artist = songs[1]
+                    if user_artist == artist:
+                        songs_by_artist.append(songs[0])
 
-shuffle_songs("songs.csv")
+                if songs_by_artist == []:
+                    return f"There are no songs by {user_artist} downloaded."
+            return songs_by_artist
+    
+    def shuffle_songs(self):
+            """A method that will take a playlist from a file and shuffle the order of the songs.
+
+            Args:
+                filepath (str): the name of the filepath with the songs that need to 
+                be shuffled. 
+            Returns:
+                list: returns a list of the songs in the filepath shuffled, using 
+                the shuffle function from the random module.
+            """
+            shuffled_songs = []
+            with open(self.filepath, "r") as f:
+                reader = csv.reader(f)
+                for line in reader:
+                    if line[0] == 'Title':
+                        continue 
+                    shuffled_songs.append(line[0])
+
+            shuffle(shuffled_songs)    
+            return shuffled_songs
+    
+    
+    def show_listening_habits(self):
+        bar = self.new_data.plot.bar(x = 'Genre', y = 'Duration')
+        
+        return bar
+                
+                
+
 
 def main():
     parser = argparse.ArgumentParser(description="Deletes a song from a playlist.")
