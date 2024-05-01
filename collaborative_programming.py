@@ -178,8 +178,11 @@ class Playlist:
         with open(self.filepath, mode='r', encoding='utf-8') as file:
             reader = csv.reader(file)
             for row in reader:
-                #to account for double quotes in csv file
-                #UPDATE ON ABOVE: most likely will not need as I've edited the file manually to remove them - BT
+                #Make sure when you are making the changes to your code that you skip over the first line
+                #bc it contains the name of the columns so liek 'Title', 'Artist', etc
+                # you can do this using this code:
+                #if row[0] == 'Title':
+                        #continue 
                 csv_song_title = row[0].strip().replace('“', '').replace('”', '').replace('"', '').lower()
                 input_song_title = song_title.strip().replace('“', '').replace('”', '').replace('"', '').lower()
                 if csv_song_title != input_song_title:
@@ -211,7 +214,7 @@ class Playlist:
                 the shuffle function from the random module.
             """
             shuffled_songs = []
-            with open(self.filepath, "r") as f:
+            with open(self.filepath, "r", encoding = "utf-8") as f:
                 reader = csv.reader(f)
                 for line in reader:
                     if line[0] == 'Title':
@@ -227,56 +230,53 @@ class Playlist:
         
         return bar
                 
-def songs_per_artist(filepath):
-    """
-    Counts the number of songs by each artist stored on the iPod
+    def songs_per_artist(self):
+        """
+        Counts the number of songs by each artist stored on the iPod
 
-    Args:
-    filepath(str): Path to CSV file containing information about each song
+        Args:
+        filepath(str): Path to CSV file containing information about each song
 
-    Returns:
-    dict: A dictionary where the keys are the artist and the values are the number of songs they have on the iPod
-    """
-    with open(filepath, "r", encoding = "utf-8") as f:
-            #Use list comprehension to extract artist values from the csv
-            artists = [line.strip().split(",")[1] for line in f]
+        Returns:
+        dict: A dictionary where the keys are the artist and the values are the number of songs they have on the iPod
+        """
+        with open(self.filepath, "r", encoding = "utf-8") as f:
+                #Use list comprehension to extract artist values from the csv
+                artists = [line.strip().split(",")[1] for line in f]
+                #print(set(artists))
 
-    #Counting the number of each song on the iPod written by each aritst using a dictionary comprehension
-            songs_artist_dict = {artist: artists.count(artist) for artist in set(artists)}
-        
+        #Counting the number of each song on the iPod written by each aritst using a dictionary comprehension
+                songs_artist_dict = {artist: f"{artists.count(artist)} songs/s" for artist in set(artists)}
+               #Put the f string in your conditional expression instead of the for loop you had
+
+        #Added a return instead of your print because the function needs a return and can't return None
+        return songs_artist_dict
     
 
-    for artist, count in  songs_artist_dict.items():
-        print(f"{artist}: {count} song/s")
-        
-songs_per_artist("songs.csv")
+#Don't need this function as the view_all_songs function allows users to sort the songs by duration already
+    def sort_by_duration(self):
+        """
+        Sorts the songs by duration in seconds
 
+        Args:
+        filepath (str): Path to csv file containing song information.
 
-def sort_by_duration(filepath):
-    """
-    Sorts the songs by duration in seconds
+        Returns: str: f string containing the list of song titles sorted by duration in descending order.
+        Side effects: modifies songs list by adding values from the csv file.
+        """
 
-    Args:
-    filepath (str): Path to csv file containing song information.
+        with open(self.filepath, "r", encoding = "utf-8") as f:
 
-    Returns: str: f string containing the list of song titles sorted by duration in descending order.
-    Side effects: modifies songs list by adding values from the csv file.
-    """
+                songs = []
+                for line in f:
+                    song_title, artist, genre, duration, release_date = line.strip().split(",")
+                    songs.append((song_title, artist, genre, duration, release_date ))
+    #Sort songs in descending order by duration in seconds
+        sorted_by_duration = sorted(songs, reverse = True, key=lambda x: x[3])
+    #Extract song titles
+        sorted_song_titles = [song[0] for song in sorted_by_duration]
 
-    with open(filepath, "r", encoding = "utf-8") as f:
-            
-            songs = []
-            for line in f:
-                song_title, artist, genre, duration, release_date = line.strip().split(",")
-                songs.append((song_title, artist, genre, duration, release_date ))
-#Sort songs in descending order by duration in seconds
-    sorted_by_duration = sorted(songs, reverse = True, key=lambda x: x[3])
-#Extract song titles
-    sorted_song_titles = [song[0] for song in sorted_by_duration]
-
-    print(f" List of ssong titles sorted by duration in descending order: {sorted_song_titles}")
-
-sort_by_duration("songs.csv")
+        return (f" List of song titles sorted by duration in descending order: {sorted_song_titles}")
                               
 
 
