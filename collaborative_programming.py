@@ -14,15 +14,15 @@ class Playlist:
     
     def __init__(self, filepath):
         self.filepath = filepath
+        self.now_playing_song = None
         
     
-    def uploadSong(self, filepath, song_title, artist, genre, \
+    def upload_song(self, song_title, artist, genre, \
             duration=None, release=None):
         """Uploads song details to a playlist in an iPod represented by a CSV
             file using Pandas.
 
         Args:
-            filepath (str): the path to the CSV file representing the playlist.
             song_title (str): the title of the song.
             artist (str): the artist of the song.
             genre (str): the genre of the song.
@@ -45,22 +45,16 @@ class Playlist:
                 message.
         """
             
-        duration_seconds = None
-        if duration:
-            if ':' in duration:
-                try:
-                    minutes, seconds = [int(part) for part in \
-                        duration.split(':')]
-                    duration_seconds = minutes * 60 + seconds
-                except ValueError:
-                    print("Invalid duration format. Please use 'mm:ss'.")
-                    return False
-            else:
-                print("Invalid duration format. Please use 'mm:ss'.")
-                return False
+        try:
+            duration_seconds = int(duration.split(':')[0]) * 60 + \
+                int(duration.split(':')[1]) if duration and ':' in duration \
+                    else None
+        except ValueError:
+            print("Invalid duration format. Please use 'mm:ss'.")
+            return False
             
         try:
-            existing_data = pd.read_csv(filepath)
+            existing_data = pd.read_csv(self.filepath)
         except FileNotFoundError:
             print("Error: File not found.")
             return False
@@ -72,10 +66,13 @@ class Playlist:
             
         updated_data = pd.concat([existing_data, new_song_df], \
                 ignore_index=True)
+        updated_data['Release'] = pd.to_datetime(updated_data['Release'])
             
         try:
-            updated_data.to_csv(filepath, index=False)
+            updated_data.to_csv(self.filepath, index=False)
+            self.new_data = updated_data
             return True
+        
         except Exception as e:
             print(f"Error uploading song: {e}")
             return False
