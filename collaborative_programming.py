@@ -15,6 +15,7 @@ class Playlist:
     def __init__(self, filepath):
         self.filepath = filepath
         self.now_playing_song = None
+        self.new_data = None
         
     
     def upload_song(self, song_title, artist, genre, \
@@ -155,8 +156,8 @@ class Playlist:
         return updated_playlist
 
     def search_by_artist(filepath, user_artist):
-            """Function where the user can enter an artist's name and it will return
-            every song by that artist that is downloaded on the iPod.
+            """Function where the user can enter an artist's name and it will 
+            return every song by that artist that is downloaded on the iPod.
             
             Args:
             user_artist(str)
@@ -180,7 +181,8 @@ class Playlist:
     search_by_artist("songs.csv", "Justin Bieber")
 
     def shuffle_songs(filepath):
-        """A method that will take a playlist from a file and shuffle the order of the songs.
+        """A method that will take a playlist from a file and shuffle the order 
+            of the songs.
 
         Args:
             filepath (str): the name of the filepath with the songs that need to 
@@ -200,11 +202,77 @@ class Playlist:
         return shuffled_songs
 
     shuffle_songs("songs.csv")
+    
+    def play_song(self, song_title):
+        """Attempts to find and play a song by its title from a CSV file.
+
+        Args:
+            song_title (str): the title of the song that is going to be played.
+
+        Returns:
+            str: a message indicating the details about the currently playing
+                song if applicable, or a message indicating that the song was
+                not found.
+        
+        Side effects:
+            modifies the 'now_playing_song' attribute with the details of the
+                song that was found.
+        """
+        try:
+            with open(self.filepath, "r", encoding="utf-8") as f:
+                reader = csv.reader(f)
+                for song in reader:
+                    csv_song_title = self.sanitize_csv_value(song[0])
+                    if csv_song_title.lower() == song_title.lower().strip():
+                        self.now_playing_song = {}
+                        keys = ['Title', 'Artist', 'Genre', 'Duration', \
+                            'Release']
+                        for i in range(len(keys)):
+                            self.now_playing_song[keys[i]] = \
+                                self.sanitize_csv_value(song[i])
+                        now_playing = self.display_now_playing()
+                        return now_playing
+                return "Song not found."
+        except FileNotFoundError:
+            return f"Couldn't find the file '{self.filepath}'."
+        except Exception as e:
+            return f"Error: {e}"
+
+    def sanitize_csv_value(self, value):
+        """Cleans CSV string values by stripping any whitespaces and replacing 
+            typographic quotes.
+
+        Args:
+            value (str): the CSV string value to be sanitized/cleaned.
+
+        Returns:
+            str: the sanitized/cleaned string value.
+        """
+        return value.strip().replace('“', '').replace('”', '').replace('"', '')
+
+    def display_now_playing(self):
+        """Displays the details of the song that is currently playing.
+
+        Returns:
+            str: a message that indicates the details of the song that is 
+                currently being played, or a message indicating that no song is
+                currently playing.
+        """
+        if self.now_playing_song:
+            return (
+                f"Now playing: '{self.now_playing_song['Title']}' by "
+                f"{self.now_playing_song['Artist']} from the genre "
+                f"{self.now_playing_song['Genre']}. Duration: "
+                f"{self.now_playing_song['Duration']} seconds, released on "
+                f"{self.now_playing_song['Release']}."
+            )
+        else:
+            return "No song is currently playing."
 
 def main():
     parser = argparse.ArgumentParser(description="Deletes a song from a playlist.")
     parser.add_argument("song_title", help="The title of the song to delete.")
-    parser.add_argument("--filepath", default="playlist.csv", help="The path to the playlist CSV file.")
+    parser.add_argument("--filepath", default="songs.csv", help="The path to the playlist CSV file.")
     args = parser.parse_args()
 
     playlist_manager = Playlist(args.filepath)
