@@ -88,13 +88,26 @@ class Playlist:
             return False
         
     def play_song(self, song_title):
-        """Attempts to find and play a song by title from a CSV file."""
+        """Attempts to find and play a song by title from a CSV file.
+
+        Args:
+            song_title (str): the title of the song that is going to be played.
+
+        Returns:
+            str: a message indicating the details about the currently playing
+                song if applicable, or a message indicating that the song was
+                not found.
+        
+        Side effects:
+            modifies the 'now_playing_song' attribute with the details of the
+                song that was found.
+        """
         try:
             with open(self.filepath, "r", encoding="utf-8") as f:
                 reader = csv.reader(f)
                 for song in reader:
                     csv_title = song[0].strip().lower()
-                    if csv_title  == song_title.lower().strip():
+                    if csv_title == song_title.lower().strip():
                         self.now_playing_song = {}
                         keys = ['Title', 'Artist', 'Genre', 'Duration', \
                             'Release']
@@ -109,7 +122,13 @@ class Playlist:
             return f"Error: {e}"
 
     def display_now_playing(self):
-        """Displays details of the currently playing song."""
+        """Displays the details of the song that is currently playing.
+
+        Returns:
+            str: a message that indicates the details of the song that is 
+                currently being played, or a message indicating that no song is
+                currently playing.
+        """
         if self.now_playing_song:
             return (f"Now playing: '{self.now_playing_song['Title']}' by " 
                     f"{self.now_playing_song['Artist']} "
