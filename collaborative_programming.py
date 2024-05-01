@@ -47,19 +47,13 @@ class Playlist:
                 message.
         """
             
-        duration_seconds = None
-        if duration:
-            if ':' in duration:
-                try:
-                    minutes, seconds = [int(part) for part in \
-                        duration.split(':')]
-                    duration_seconds = minutes * 60 + seconds
-                except ValueError:
-                    print("Invalid duration format. Please use 'mm:ss'.")
-                    return False
-            else:
-                print("Invalid duration format. Please use 'mm:ss'.")
-                return False
+        try: 
+            duration_seconds = int(duration.split(':')[0]) * 60 + \
+                int(duration.split(':')[1]) if duration and ':' in duration \
+                    else None
+        except ValueError:
+            print("Invalid duration format. Please use 'mm:ss'.")
+            return False
             
         try:
             existing_data = pd.read_csv(self.filepath)
