@@ -18,6 +18,10 @@ class Playlist:
         self.now_playing_song = {}
         self.new_data = None
         
+    def create_database(self):
+        self.new_data = pd.read_csv(self.filepath)
+        
+        return self.new_data
     
     def upload_song(self, song_title, artist, genre, \
             duration=None, release=None):
@@ -68,14 +72,13 @@ class Playlist:
         new_song_data = [song_title, artist, genre, \
                 duration_seconds, release]
         
-        columns = existing_data.columns
-        new_song_df = pd.DataFrame([new_song_data], columns=columns)
+        columns = self.new_data.columns
+
+        new_song_df = pd.DataFrame([new_song_data], columns = columns)
         
             
-        updated_data = pd.concat([existing_data, new_song_df], \
-                ignore_index=True)
-        updated_data['Release'] \
-            = pd.to_datetime(updated_data['Release'])
+        updated_data = pd.concat([self.new_data, new_song_df],ignore_index=True)
+        updated_data['Release']= pd.to_datetime(updated_data['Release'])
         
             
         try:
@@ -277,6 +280,7 @@ class Playlist:
         sorted_song_titles = [song[0] for song in sorted_by_duration]
 
         return (f" List of song titles sorted by duration in descending order: {sorted_song_titles}")
+
                               
 
 
