@@ -252,6 +252,31 @@ def songs_per_artist(filepath):
 songs_per_artist("songs.csv")
 
 
+def sort_by_duration(filepath):
+    """
+    Sorts the songs by duration in seconds
+
+    Args:
+    filepath (str): Path to csv file containing song information.
+
+    Returns: str: f string containing the list of song titles sorted by duration in descending order.
+    Side effects: modifies songs list by adding values from the csv file.
+    """
+
+    with open(filepath, "r", encoding = "utf-8") as f:
+            
+            songs = []
+            for line in f:
+                song_title, artist, genre, duration, release_date = line.strip().split(",")
+                songs.append((song_title, artist, genre, duration, release_date ))
+#Sort songs in descending order by duration in seconds
+    sorted_by_duration = sorted(songs, reverse = True, key=lambda x: x[3])
+#Extract song titles
+    sorted_song_titles = [song[0] for song in sorted_by_duration]
+
+    print(f" List of ssong titles sorted by duration in descending order: {sorted_song_titles}")
+
+sort_by_duration("songs.csv")
                               
 
 
