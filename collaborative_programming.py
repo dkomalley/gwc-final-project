@@ -263,12 +263,12 @@ class Playlist:
         """
         with open(self.filepath, "r", encoding = "utf-8") as f:
                 #Use list comprehension to extract artist values from the csv
-                artists = [line.strip().split(",")[1] for line in f]
+            artists = [line.strip().split(",")[1] for line in f]
                 #print(set(artists))
 
         #Counting the number of each song on the iPod written by each aritst using a dictionary comprehension
-                songs_artist_dict = {artist: f"{artists.count(artist)} songs/s"\
-                    for artist in set(artists)}
+            songs_artist_dict = {artist: f"{artists.count(artist)} songs/s"\
+            for artist in set(artists)}
                #Put the f string in your conditional expression instead of the for loop you had
 
         #Added a return instead of your print because the function needs a return and can't return None
@@ -276,40 +276,42 @@ class Playlist:
     
 
 #Don't need this function as the view_all_songs function allows users to sort the songs by duration already
-    def sort_by_duration(self):
-        """
-        Sorts the songs by duration in seconds
+   
+    # def sort_by_duration(self):
+    #     """
+    #     Sorts the songs by duration in seconds
 
-        Args:
-        filepath (str): Path to csv file containing song information.
+    #     Args:
+    #     filepath (str): Path to csv file containing song information.
 
-        Returns: 
-            str: f string containing the list of song titles sorted by 
-            duration in descending order.
-        Side effects: 
-            modifies songs list by adding values from the csv file.
-        """
+    #     Returns: 
+    #         str: f string containing the list of song titles sorted by 
+    #         duration in descending order.
+    #     Side effects: 
+    #         modifies songs list by adding values from the csv file.
+    #     """
 
-        with open(self.filepath, "r", encoding = "utf-8") as f:
+    #     with open(self.filepath, "r", encoding = "utf-8") as f:
 
-                songs = []
-                for line in f:
-                    song_title, artist, genre, duration, release_date = \
-                        line.strip().split(",")
-                    songs.append((song_title, artist, genre, duration, \
-                        release_date ))
-    #Sort songs in descending order by duration in seconds
-        sorted_by_duration = sorted(songs, reverse = True, key=lambda x: x[3])
-    #Extract song titles
-        sorted_song_titles = [song[0] for song in sorted_by_duration]
+    #             songs = []
+    #             for line in f:
+    #                 song_title, artist, genre, duration, release_date = \
+    #                     line.strip().split(",")
+    #                 songs.append((song_title, artist, genre, duration, \
+    #                     release_date ))
+    # #Sort songs in descending order by duration in seconds
+    #     sorted_by_duration = sorted(songs, reverse = True, key=lambda x: x[3])
+    # #Extract song titles
+    #     sorted_song_titles = [song[0] for song in sorted_by_duration]
 
-        return (f" List of song titles sorted by duration in descending order:\
-            {sorted_song_titles}")
+    #     return (f" List of song titles sorted by duration in descending order:\
+    #         {sorted_song_titles}")
 
                               
 
 
-def main():
+def parse_args(arglist):
+    parser = ArgumentParser()
     parser = argparse.ArgumentParser(description="Deletes a song from a \
         playlist.")
     parser.add_argument("song_title", help="The title of the song to delete.")
@@ -323,6 +325,7 @@ def main():
     print(f"Updated playlist after deleting \"{args.song_title}\":")
     for song in updated_playlist:
         print(song)
+    return parser.parse_args(arglist)
 
 if __name__ == "__main__":
     main()
