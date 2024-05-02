@@ -18,6 +18,20 @@ class Playlist:
         self.now_playing_song = {}
         self.new_data = None
         
+    def __repr__(self):
+        """Returns the formal representation of the object in an f-string.
+
+        """
+        return f"Playlist({self.filepath},{self.now_playing_song},\
+            {self.new_data})"
+    
+    def __getitem__(self, key):
+        """Returns the index of the now playing song in the music library.
+
+        """
+        return self.now_playing_song[key]
+        
+        
     def create_database(self):
         self.new_data = pd.read_csv(self.filepath)
         
@@ -187,8 +201,10 @@ class Playlist:
                         header_skipped = True
                         continue
                 if row:
-                    csv_song_title = row[0].strip().replace('“', '').replace('”', '').replace('"', '').lower()
-                    input_song_title = song_title.strip().replace('“', '').replace('”', '').replace('"', '').lower()
+                    csv_song_title = row[0].strip().replace('“', '')\
+                        .replace('”', '').replace('"', '').lower()
+                    input_song_title = song_title.strip().replace('“', '')\
+                        .replace('”', '').replace('"', '').lower()
                     if csv_song_title != input_song_title:
                         updated_playlist.append(row)
                     else:
@@ -208,14 +224,15 @@ class Playlist:
     
 
     def shuffle_songs(self):
-            """A method that will take a playlist from a file and shuffle the order of the songs.
+            """A method that will take a playlist from a file and shuffle 
+            the order of the songs.
 
             Args:
-                filepath (str): the name of the filepath with the songs that need to 
-                be shuffled. 
+                filepath (str): the name of the filepath with the songs that
+                need to be shuffled. 
             Returns:
-                list: returns a list of the songs in the filepath shuffled, using 
-                the shuffle function from the random module.
+                list: returns a list of the songs in the filepath shuffled, 
+                using the shuffle function from the random module.
             """
             shuffled_songs = []
             with open(self.filepath, "r", encoding = "utf-8") as f:
@@ -250,7 +267,8 @@ class Playlist:
                 #print(set(artists))
 
         #Counting the number of each song on the iPod written by each aritst using a dictionary comprehension
-                songs_artist_dict = {artist: f"{artists.count(artist)} songs/s" for artist in set(artists)}
+                songs_artist_dict = {artist: f"{artists.count(artist)} songs/s"\
+                    for artist in set(artists)}
                #Put the f string in your conditional expression instead of the for loop you had
 
         #Added a return instead of your print because the function needs a return and can't return None
@@ -265,30 +283,38 @@ class Playlist:
         Args:
         filepath (str): Path to csv file containing song information.
 
-        Returns: str: f string containing the list of song titles sorted by duration in descending order.
-        Side effects: modifies songs list by adding values from the csv file.
+        Returns: 
+            str: f string containing the list of song titles sorted by 
+            duration in descending order.
+        Side effects: 
+            modifies songs list by adding values from the csv file.
         """
 
         with open(self.filepath, "r", encoding = "utf-8") as f:
 
                 songs = []
                 for line in f:
-                    song_title, artist, genre, duration, release_date = line.strip().split(",")
-                    songs.append((song_title, artist, genre, duration, release_date ))
+                    song_title, artist, genre, duration, release_date = \
+                        line.strip().split(",")
+                    songs.append((song_title, artist, genre, duration, \
+                        release_date ))
     #Sort songs in descending order by duration in seconds
         sorted_by_duration = sorted(songs, reverse = True, key=lambda x: x[3])
     #Extract song titles
         sorted_song_titles = [song[0] for song in sorted_by_duration]
 
-        return (f" List of song titles sorted by duration in descending order: {sorted_song_titles}")
+        return (f" List of song titles sorted by duration in descending order:\
+            {sorted_song_titles}")
 
                               
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Deletes a song from a playlist.")
+    parser = argparse.ArgumentParser(description="Deletes a song from a \
+        playlist.")
     parser.add_argument("song_title", help="The title of the song to delete.")
-    parser.add_argument("--playlist_path", default="playlist.csv", help="The path to the playlist CSV file.")
+    parser.add_argument("--playlist_path", default="playlist.csv", \
+        help="The path to the playlist CSV file.")
     args = parser.parse_args()
 
     playlist_manager = Playlist(args.playlist_path)
