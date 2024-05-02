@@ -180,18 +180,19 @@ class Playlist:
         song_found = False
         with open(self.filepath, mode='r', encoding='utf-8') as file:
             reader = csv.reader(file)
+            header_skipped = False
             for row in reader:
-                #Make sure when you are making the changes to your code that you skip over the first line
-                #bc it contains the name of the columns so liek 'Title', 'Artist', etc
-                # you can do this using this code:
-                #if row[0] == 'Title':
-                        #continue 
-                csv_song_title = row[0].strip().replace('“', '').replace('”', '').replace('"', '').lower()
-                input_song_title = song_title.strip().replace('“', '').replace('”', '').replace('"', '').lower()
-                if csv_song_title != input_song_title:
-                    updated_playlist.append(row)
-                else:
-                    song_found = True
+                if not header_skipped:
+                    if "Title" in row:
+                        header_skipped = True
+                        continue
+                if row:
+                    csv_song_title = row[0].strip().replace('“', '').replace('”', '').replace('"', '').lower()
+                    input_song_title = song_title.strip().replace('“', '').replace('”', '').replace('"', '').lower()
+                    if csv_song_title != input_song_title:
+                        updated_playlist.append(row)
+                    else:
+                        song_found = True
         #When returning data from this function, we maybe should only return whether or not the song was deleted
         if song_found:
             print(f"'{song_title}' found and deleted.")
@@ -287,17 +288,15 @@ class Playlist:
 def main():
     parser = argparse.ArgumentParser(description="Deletes a song from a playlist.")
     parser.add_argument("song_title", help="The title of the song to delete.")
-    parser.add_argument("--filepath", default="songs.csv", help="The path to the playlist CSV file.")
+    parser.add_argument("--playlist_path", default="playlist.csv", help="The path to the playlist CSV file.")
     args = parser.parse_args()
 
-    playlist_manager = Playlist(args.filepath)
+    playlist_manager = Playlist(args.playlist_path)
     updated_playlist = playlist_manager.delete_songs(args.song_title)
 
     print(f"Updated playlist after deleting \"{args.song_title}\":")
     for song in updated_playlist:
         print(song)
-             
-    
 
 if __name__ == "__main__":
     main()
