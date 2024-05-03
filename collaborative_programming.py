@@ -181,6 +181,8 @@ class Playlist:
             return release['Title']
                    
                 
+        
+                
     def delete_songs(self,song_title):
         """Deletes songs off a playlist and returns the updated playlist.
 
@@ -194,21 +196,18 @@ class Playlist:
         song_found = False
         with open(self.filepath, mode='r', encoding='utf-8') as file:
             reader = csv.reader(file)
-            header_skipped = False
             for row in reader:
-                if not header_skipped:
-                    if "Title" in row:
-                        header_skipped = True
-                        continue
-                if row:
-                    csv_song_title = row[0].strip().replace('“', '')\
-                        .replace('”', '').replace('"', '').lower()
-                    input_song_title = song_title.strip().replace('“', '')\
-                        .replace('”', '').replace('"', '').lower()
-                    if csv_song_title != input_song_title:
-                        updated_playlist.append(row)
-                    else:
-                        song_found = True
+                #Make sure when you are making the changes to your code that you skip over the first line
+                #bc it contains the name of the columns so liek 'Title', 'Artist', etc
+                # you can do this using this code:
+                #if row[0] == 'Title':
+                        #continue 
+                csv_song_title = row[0].strip().replace('“', '').replace('”', '').replace('"', '').lower()
+                input_song_title = song_title.strip().replace('“', '').replace('”', '').replace('"', '').lower()
+                if csv_song_title != input_song_title:
+                    updated_playlist.append(row)
+                else:
+                    song_found = True
         #When returning data from this function, we maybe should only return whether or not the song was deleted
         if song_found:
             print(f"'{song_title}' found and deleted.")
@@ -220,7 +219,6 @@ class Playlist:
             writer.writerows(updated_playlist)
 
         return updated_playlist
-        # Should we instead return the updated dataframe instead of the list? - BT
     
 
     def shuffle_songs(self):
