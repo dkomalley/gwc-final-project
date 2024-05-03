@@ -79,7 +79,6 @@ class Playlist:
             print("Error: File not found.")
             return False
         
-        existing_columns = existing_data.columns.str.lower()
         if 'Release' not in existing_data.columns:
             print("Error: 'Release' column not found in the CSV file.")
             return False
