@@ -273,37 +273,43 @@ class Playlist:
         return songs_artist_dict
     
 
-#Don't need this function as the view_all_songs function allows users to sort the songs by duration already
-   
-    # def sort_by_duration(self):
-    #     """
-    #     Sorts the songs by duration in seconds
+def calculate_durations(filepath):
+    """
+    Sorts the songs by duration in seconds
 
-    #     Args:
-    #     filepath (str): Path to csv file containing song information.
+    Args:
+    filepath (str): Path to csv file containing song information.
 
-    #     Returns: 
-    #         str: f string containing the list of song titles sorted by 
-    #         duration in descending order.
-    #     Side effects: 
-    #         modifies songs list by adding values from the csv file.
-    #     """
+    Returns: str: f string containing the list of song titles sorted by duration in descending order and the longest song with its length.
+    Side effects: modifies songs list by adding values from the csv file.
+    """
 
-    #     with open(self.filepath, "r", encoding = "utf-8") as f:
+    with open(filepath, "r", encoding = "utf-8") as f:
+            
+            songs = []
+            for line in f:
+                song_title, artist, genre, duration, release_date = line.strip().split(",")
+                songs.append((song_title, artist, genre, duration, release_date ))
+                
+#Sort songs in descending order by duration in seconds
+    sorted_by_duration = sorted(songs, reverse = True, key=lambda x: x[3])
 
-    #             songs = []
-    #             for line in f:
-    #                 song_title, artist, genre, duration, release_date = \
-    #                     line.strip().split(",")
-    #                 songs.append((song_title, artist, genre, duration, \
-    #                     release_date ))
-    # #Sort songs in descending order by duration in seconds
-    #     sorted_by_duration = sorted(songs, reverse = True, key=lambda x: x[3])
-    # #Extract song titles
-    #     sorted_song_titles = [song[0] for song in sorted_by_duration]
 
-    #     return (f" List of song titles sorted by duration in descending order:\
-    #         {sorted_song_titles}")
+#Extract song titles
+    
+    sorted_song_titles = [song[0] for song in sorted_by_duration]
+
+#Extract durations
+    song_durations = [duration[3] for duration in sorted_by_duration]
+#Calculate longest song downloaded on iPod
+    longest_song = max(song_durations)
+
+
+    return(f" List of song titles sorted by duration in descending order: {sorted_song_titles}. The longest song on this iPod is {sorted_song_titles[0]} and it is {longest_song} seconds long.") 
+calculate_durations("songs.csv")
+
+
+
 
                               
 
