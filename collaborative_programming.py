@@ -275,7 +275,7 @@ class Playlist:
 
 def calculate_durations(filepath):
     """
-    Sorts the songs by duration in seconds
+    Creates a list of all the songs on thhe iPod in order of their duration and also calculates the longest song with its length."
 
     Args:
     filepath (str): Path to csv file containing song information.
