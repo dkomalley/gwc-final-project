@@ -29,7 +29,7 @@ class Playlist:
         """Returns the index of the now playing song in the music library.
 
         """
-        return self.now_playing_song[key]
+        return self.new_data[key]
         
         
     def create_database(self):
