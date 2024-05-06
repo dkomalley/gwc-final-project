@@ -289,6 +289,8 @@ def calculate_durations(filepath):
             songs = []
             for line in f:
                 song_title, artist, genre, duration, release_date = line.strip().split(",")
+                if song_title == 'Title':
+                    continue
                 songs.append((song_title, artist, genre, duration, release_date ))
                 
 #Sort songs in descending order by duration in seconds
@@ -307,6 +309,7 @@ def calculate_durations(filepath):
 
     return(f" List of song titles sorted by duration in descending order: {sorted_song_titles}. The longest song on this iPod is {sorted_song_titles[0]} and it is {longest_song} seconds long.") 
 calculate_durations("songs.csv")
+
 
 
 
