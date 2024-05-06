@@ -243,30 +243,30 @@ class Playlist:
         
         return bar
                 
-    def songs_per_artist(self):
-        """
-        Counts the number of songs by each artist stored on the iPod.
+def songs_per_artist(filepath):
+    """
+    Counts the number of songs by each artiist stored on the iPod
 
-        Args:
-            filepath(str): Path to CSV file containing information about each 
-                song.
+    Args:
+    filepath(str): Path to CSV file containing information about each song.
 
-        Returns:
-            dict: A dictionary where the keys are the artist and the values are 
-                the number of songs they have on the iPod.
-        """
-        with open(self.filepath, "r", encoding = "utf-8") as f:
-                #Use list comprehension to extract artist values from the csv
-            artists = [line.strip().split(",")[1] for line in f]
-                #print(set(artists))
+    Returns 
+    songs_artist_dict(dict): A dictionary where the keys are the artist and the values are the number of songs they have on the iPod.
+    """
 
-        #Counting the number of each song on the iPod written by each aritst using a dictionary comprehension
-            songs_artist_dict = {artist: f"{artists.count(artist)} songs/s"\
-            for artist in set(artists)}
-               #Put the f string in your conditional expression instead of the for loop you had
+    with open(filepath, "r", encoding = "utf-8") as f:
+        #Skips header line
+        next(f)
+        #Use list comprehension to extract artist values from CSV file
+        artists = [line.strip().split(",") [1] for line in f]
 
-        #Added a return instead of your print because the function needs a return and can't return None
-        return songs_artist_dict
+        #Counts the number of songs written by each artist downloaded on the iPod using a dictionary comprehension
+
+        songs_artist_dict = {artist: f"{artists.count(artist)} song/s." \
+        for artist in set(artists)}
+
+    return songs_artist_dict
+songs_per_artist("songs.csv")
 
 def calculate_durations(filepath):
     """
