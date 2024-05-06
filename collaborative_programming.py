@@ -239,7 +239,8 @@ class Playlist:
             return shuffled_songs
     
     def show_listening_habits(self):
-        bar = self.new_data.plot.bar(x = 'Genre', y = 'Duration')
+        group = self.new_data.groupby('Genre')['Duration'].sum()
+        bar = group.plot.bar(x = 'Genre', y = 'Duration')
         
         return bar
                 
