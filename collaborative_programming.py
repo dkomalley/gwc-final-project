@@ -155,7 +155,6 @@ class Playlist:
         else:
             return "No song is currently playing."
   
-   
     def view_all_songs(self, order = "Recently Added"):
         """Returns all of the user's added songs in a specified order.
         
@@ -179,10 +178,7 @@ class Playlist:
             release = self.new_data.sort_values('Release')
 
             return release['Title']
-                   
-                
-        
-                
+                                    
     def delete_songs(self,song_title):
         """Deletes songs off a playlist and returns the updated playlist.
 
@@ -220,7 +216,6 @@ class Playlist:
 
         return updated_playlist
     
-
     def shuffle_songs(self):
             """A method that will take a playlist from a file and shuffle 
             the order of the songs.
@@ -243,7 +238,6 @@ class Playlist:
             shuffle(shuffled_songs)    
             return shuffled_songs
     
-    
     def show_listening_habits(self):
         bar = self.new_data.plot.bar(x = 'Genre', y = 'Duration')
         
@@ -251,13 +245,15 @@ class Playlist:
                 
     def songs_per_artist(self):
         """
-        Counts the number of songs by each artist stored on the iPod
+        Counts the number of songs by each artist stored on the iPod.
 
         Args:
-        filepath(str): Path to CSV file containing information about each song
+            filepath(str): Path to CSV file containing information about each 
+                song.
 
         Returns:
-        dict: A dictionary where the keys are the artist and the values are the number of songs they have on the iPod
+            dict: A dictionary where the keys are the artist and the values are 
+                the number of songs they have on the iPod.
         """
         with open(self.filepath, "r", encoding = "utf-8") as f:
                 #Use list comprehension to extract artist values from the csv
@@ -271,17 +267,21 @@ class Playlist:
 
         #Added a return instead of your print because the function needs a return and can't return None
         return songs_artist_dict
-    
 
 def calculate_durations(filepath):
     """
-    Creates a list of all the songs on thhe iPod in order of their duration and also calculates the longest song with its length."
+    Creates a list of all the songs on the iPod in order of their duration and 
+        also calculates the longest song with its length."
 
     Args:
-    filepath (str): Path to csv file containing song information.
+        filepath (str): Path to csv file containing song information.
 
-    Returns: str: f string containing the list of song titles sorted by duration in descending order and the longest song with its length.
-    Side effects: modifies songs list by adding values from the csv file.
+    Returns: 
+        str: f string containing the list of song titles sorted by duration in 
+            descending order and the longest song with its length.
+    
+    Side effects: 
+        modifies songs list by adding values from the csv file.
     """
 
     with open(filepath, "r", encoding = "utf-8") as f:
