@@ -1,7 +1,7 @@
 import pandas as pd
 from datetime import datetime
 import csv
-import argparse
+import argparse 
 from random import shuffle
 from matplotlib import pyplot as plt
 
@@ -447,7 +447,6 @@ def check_playlist(filepath, song, favorite = False):
 
 
 def parse_args(arglist):
-    parser = ArgumentParser()
     parser = argparse.ArgumentParser(description="Deletes a song from a \
         playlist.")
     parser.add_argument("song_title", help="The title of the song to delete.")
