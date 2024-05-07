@@ -63,6 +63,13 @@ class Playlist:
                 variable accordingly.
             if an error occurs during the upload process, it prints and error 
                 message.
+                
+        Author:
+            Daphne O'Malley
+            
+        Technique:
+            conditional expressions
+            concatenating on Pandas DataFrame
         """
         if self.new_data is None:
             self.create_database()   
@@ -121,6 +128,9 @@ class Playlist:
         Side effects:
             modifies the 'now_playing_song' attribute with the details of the
                 song that was found.
+                
+        Author:
+            Daphne O'Malley
         """
         try:
             with open(self.filepath, "r", encoding="utf-8") as f:
@@ -148,6 +158,9 @@ class Playlist:
             str: a message that indicates the details of the song that is 
                 currently being played, or a message indicating that no song is
                 currently playing.
+                
+        Author:
+            Daphne O'Malley
         """
         if self.now_playing_song:
             return (f"Now playing: '{self.now_playing_song['Title']}' by " 
@@ -174,8 +187,6 @@ class Playlist:
         Technique:
             optional parameters
         """
-        
-        
         if order == "Recently Added":
             recent = self.new_data.sort_index(ascending = False)
             return recent['Title']
