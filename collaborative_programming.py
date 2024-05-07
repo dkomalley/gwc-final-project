@@ -364,6 +364,11 @@ def upload_song_menu(playlist):
     duration = input("Enter the duration of the song (mm:ss): ")
     release = input("Enter the release date of the song (YYYY-MM-DD): ")
     playlist.upload_song(song_title, artist, genre, duration, release)
+    
+    if playlist.upload_song(song_title, artist, genre, duration, release):
+        print(f"The song '{song_title}' was uploaded successfully.")
+    else:
+        print(f"Failed to upload the song '{song_title}'. Please try again.")
 
 def delete_song_menu(playlist):
     """Asks the user to specify the title of the song they want to delete from
