@@ -164,6 +164,12 @@ class Playlist:
             
         Returns:
             list: list of all added songs according to specified order.
+            
+        Author:
+            Becky Takang
+            
+        Technique:
+            optional parameters
         """
         
         
@@ -239,6 +245,18 @@ class Playlist:
             return shuffled_songs
     
     def show_listening_habits(self):
+        """Shows how long a user spends listening to a certain genre of music
+
+        Returns:
+            pyplot bar graph : pyplot bar graph with the results of the \
+                user's listening habits
+                
+        Author:
+            Becky Takang
+            
+        Technique:
+            visualizing data with pyplot
+        """
         group = self.new_data.groupby('Genre')['Duration'].sum()
         bar = group.plot.bar(x = 'Genre', y = 'Duration')
         
