@@ -352,9 +352,10 @@ def menu():
     print("2. Delete a song")
     print("3. Play a song")
     print("4. Count songs per artist")
-    print("5. Print list of songs ordered by duration along with longest song\
-        and its length")
-    print("6. Turn off IPod")
+    print("5. Print list of songs ordered by duration along with longest song"
+        " and its length")
+    print("6. View all songs")
+    print("7. Turn off IPod")
 
 def upload_song_menu(playlist):
     """Asks the user to provide the details of the song they want to be added to
@@ -397,6 +398,34 @@ def play_song_menu(playlist):
     song_title = input("Enter the title of the song to be played: ")
     print(playlist.play_song(song_title))
 
+def view_all_songs_menu(playlist):
+    """Asks the user to input their filtering criteria for the view_all_songs \
+        function
+
+    Args:
+        playlist (Playlist): the playlist object from which the songs will \
+            be returned
+
+    """
+    
+    while True:
+        option = input("How would you like to view your songs: Recently Added," 
+        " Alphabetical, Release Year ")
+        if option == 'Recently Added':
+            print(playlist.view_all_songs('Recently Added'))
+            break
+            
+        elif option == 'Alphabetical':
+            print(playlist.view_all_songs('Alphabetical'))
+            break
+            
+        elif option == 'Release Year':
+            print(playlist.view_all_songs('Release Year'))
+            break
+            
+        else:
+            print(f"Please choose from one of the given options")
+
 def songs_per_artist_menu(playlist):
     print(playlist.songs_per_artist())
 
@@ -426,6 +455,8 @@ def main():
         elif choice == "5":
             calculate_durations_menu(music_library_manager)
         elif choice == "6":
+            view_all_songs_menu(music_library_manager)
+        elif choice == "7":
             print("Ipod shutting down")
             break
         else:
