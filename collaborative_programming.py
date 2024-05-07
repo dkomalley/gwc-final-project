@@ -16,23 +16,25 @@ class Playlist:
     def __init__(self, filepath):
         self.filepath = filepath
         self.now_playing_song = {}
-        self.new_data = None
+        self.create_database()
         
     def __repr__(self):
-        """Returns the formal representation of the object in an f-string.
-
-        """
+        """Returns the formal representation of the object in an f-string."""
         return f"Playlist({self.filepath},{self.now_playing_song},\
             {self.new_data})"
     
     def __getitem__(self, key):
-        """Returns the index of the now playing song in the music library.
-
-        """
+        """Returns the index of the now playing song in the music library."""
         return self.new_data[key]
         
-        
     def create_database(self):
+        """Loads data from a CSV file into a DataFrame, and reads data from the
+            CSV file specified by the `filepath` attribute and stores it in the
+            `new_data` attribute.
+
+        Returns:
+            pandas.DataFrame: DataFrame containing the loaded data.
+        """
         self.new_data = pd.read_csv(self.filepath)
         
         return self.new_data
@@ -63,7 +65,16 @@ class Playlist:
                 variable accordingly.
             if an error occurs during the upload process, it prints and error 
                 message.
+                
+        Author:
+            Daphne O'Malley
+            
+        Technique:
+            conditional expressions
+            concatenating on Pandas DataFrame
         """
+        if self.new_data is None:
+            self.create_database()   
             
         try: 
             duration_seconds = int(duration.split(':')[0]) * 60 + \
@@ -92,6 +103,7 @@ class Playlist:
         
             
         updated_data = pd.concat([self.new_data, new_song_df],ignore_index=True)
+        updated_data = updated_data.convert_dtypes()
         updated_data['Release']= pd.to_datetime(updated_data['Release'])
         
             
@@ -118,6 +130,9 @@ class Playlist:
         Side effects:
             modifies the 'now_playing_song' attribute with the details of the
                 song that was found.
+                
+        Author:
+            Daphne O'Malley
         """
         try:
             with open(self.filepath, "r", encoding="utf-8") as f:
@@ -145,6 +160,9 @@ class Playlist:
             str: a message that indicates the details of the song that is 
                 currently being played, or a message indicating that no song is
                 currently playing.
+                
+        Author:
+            Daphne O'Malley
         """
         if self.now_playing_song:
             return (f"Now playing: '{self.now_playing_song['Title']}' by " 
@@ -155,7 +173,6 @@ class Playlist:
         else:
             return "No song is currently playing."
   
-   
     def view_all_songs(self, order = "Recently Added"):
         """Returns all of the user's added songs in a specified order.
         
@@ -165,9 +182,13 @@ class Playlist:
             
         Returns:
             list: list of all added songs according to specified order.
+            
+        Author:
+            Becky Takang
+            
+        Technique:
+            optional parameters
         """
-        
-        
         if order == "Recently Added":
             recent = self.new_data.sort_index(ascending = False)
             return recent['Title']
@@ -179,10 +200,7 @@ class Playlist:
             release = self.new_data.sort_values('Release')
 
             return release['Title']
-                   
-                
-        
-                
+                                    
     def delete_songs(self,song_title):
         """Deletes songs off a playlist and returns the updated playlist.
 
@@ -220,7 +238,6 @@ class Playlist:
 
         return updated_playlist
     
-
     def shuffle_songs(self):
             """A method that will take a playlist from a file and shuffle 
             the order of the songs.
@@ -243,45 +260,64 @@ class Playlist:
             shuffle(shuffled_songs)    
             return shuffled_songs
     
-    
     def show_listening_habits(self):
-        bar = self.new_data.plot.bar(x = 'Genre', y = 'Duration')
+        """Shows how long a user spends listening to a certain genre of music
+
+        Returns:
+            pyplot bar graph : pyplot bar graph with the results of the \
+                user's listening habits
+                
+        Author:
+            Becky Takang
+            
+        Technique:
+            visualizing data with pyplot
+        """
+        group = self.new_data.groupby('Genre')['Duration'].sum()
+        bar = group.plot.bar(x = 'Genre', y = 'Duration')
         
         return bar
                 
-    def songs_per_artist(self):
-        """
-        Counts the number of songs by each artist stored on the iPod
+def songs_per_artist(filepath):
+    """
+    Counts the number of songs by each artiist stored on the iPod
 
-        Args:
-        filepath(str): Path to CSV file containing information about each song
+    Args:
+        filepath(str): Path to CSV file containing information about each song.
 
-        Returns:
-        dict: A dictionary where the keys are the artist and the values are the number of songs they have on the iPod
-        """
-        with open(self.filepath, "r", encoding = "utf-8") as f:
-                #Use list comprehension to extract artist values from the csv
-            artists = [line.strip().split(",")[1] for line in f]
-                #print(set(artists))
+    Returns 
+        songs_artist_dict(dict): A dictionary where the keys are the artist and 
+            the values are the number of songs they have on the iPod.
+    """
 
-        #Counting the number of each song on the iPod written by each aritst using a dictionary comprehension
-            songs_artist_dict = {artist: f"{artists.count(artist)} songs/s"\
-            for artist in set(artists)}
-               #Put the f string in your conditional expression instead of the for loop you had
+    with open(filepath, "r", encoding = "utf-8") as f:
+        #Skips header line
+        next(f)
+        #Use list comprehension to extract artist values from CSV file
+        artists = [line.strip().split(",") [1] for line in f]
 
-        #Added a return instead of your print because the function needs a return and can't return None
-        return songs_artist_dict
-    
+        #Counts the number of songs written by each artist downloaded on the iPod using a dictionary comprehension
+
+        songs_artist_dict = {artist: f"{artists.count(artist)} song/s." \
+        for artist in set(artists)}
+
+    return songs_artist_dict
+songs_per_artist("songs.csv")
 
 def calculate_durations(filepath):
     """
-    Creates a list of all the songs on thhe iPod in order of their duration and also calculates the longest song with its length."
+    Creates a list of all the songs on the iPod in order of their duration and 
+        also calculates the longest song with its length."
 
     Args:
-    filepath (str): Path to csv file containing song information.
+        filepath (str): Path to csv file containing song information.
 
-    Returns: str: f string containing the list of song titles sorted by duration in descending order and the longest song with its length.
-    Side effects: modifies songs list by adding values from the csv file.
+    Returns: 
+        str: f string containing the list of song titles sorted by duration in 
+            descending order and the longest song with its length.
+    
+    Side effects: 
+        modifies songs list by adding values from the csv file.
     """
 
     with open(filepath, "r", encoding = "utf-8") as f:
@@ -289,6 +325,8 @@ def calculate_durations(filepath):
             songs = []
             for line in f:
                 song_title, artist, genre, duration, release_date = line.strip().split(",")
+                if song_title == 'Title':
+                    continue
                 songs.append((song_title, artist, genre, duration, release_date ))
                 
 #Sort songs in descending order by duration in seconds
@@ -308,6 +346,77 @@ def calculate_durations(filepath):
     return(f" List of song titles sorted by duration in descending order: {sorted_song_titles}. The longest song on this iPod is {sorted_song_titles[0]} and it is {longest_song} seconds long.") 
 calculate_durations("songs.csv")
 
+def menu():
+    """Displays menu options for the IPod."""
+    print("\nIPod Menu:")
+    print("1. Upload a song")
+    print("2. Delete a song")
+    print("3. Play a song")
+    print("4. Turn off IPod")
+
+def upload_song_menu(playlist):
+    """Asks the user to provide the details of the song they want to be added to
+        the playlist.
+
+    Args:
+        playlist (Playlist): the playlist object to which the song will be added
+    """
+    song_title = input("Enter the title of the song: ")
+    artist = input("Enter the artist of the song: ")
+    genre = input("Enter the genre of the song: ")
+    duration = input("Enter the duration of the song (mm:ss): ")
+    release = input("Enter the release date of the song (YYYY-MM-DD): ")
+    playlist.upload_song(song_title, artist, genre, duration, release)
+    
+    if playlist.upload_song(song_title, artist, genre, duration, release):
+        print(f"The song '{song_title}' was uploaded successfully.")
+    else:
+        print(f"Failed to upload the song '{song_title}'. Please try again.")
+
+def delete_song_menu(playlist):
+    """Asks the user to specify the title of the song they want to delete from
+        the playlist.
+
+    Args:
+        playlist (Playlist): the playlist object from which the song will be 
+            deleted.
+    """
+    song_title = input("Enter the title of the song to delete: ")
+    playlist.delete_songs(song_title)
+
+def play_song_menu(playlist):
+    """Asks the user to specify the title of the song they want to play from the
+        playlist.
+
+    Args:
+        playlist (Playlist): the playlist object from which the song will be 
+            played.
+    """
+    song_title = input("Enter the title of the song to be played: ")
+    print(playlist.play_song(song_title))
+
+def main():
+    parser = argparse.ArgumentParser(description="Manage your playlist.")
+    parser.add_argument("--filepath", default="songs.csv", help="The path to the playlist CSV file.")
+    args = parser.parse_args()
+
+    music_library_manager = Playlist(args.filepath)
+
+    while True:
+        menu()
+        choice = input("Enter your choice (1-4): ")
+
+        if choice == "1":
+            upload_song_menu(music_library_manager)
+        elif choice == "2":
+            delete_song_menu(music_library_manager)
+        elif choice == "3":
+            play_song_menu(music_library_manager)
+        elif choice == "4":
+            print("Ipod shutting down")
+            break
+        else:
+            print("Invalid choice. Please choose a valid option.")
 
 def check_playlist(filepath, song, favorite = False):
     """Checks if a song is in the playlist/csv, and if it is a favorite song,
@@ -356,3 +465,4 @@ def parse_args(arglist):
 
 if __name__ == "__main__":
     main()
+
