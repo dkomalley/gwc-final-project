@@ -16,7 +16,7 @@ class Playlist:
     def __init__(self, filepath):
         self.filepath = filepath
         self.now_playing_song = {}
-        self.new_data = None
+        self.create_database()
         
     def __repr__(self):
         """Returns the formal representation of the object in an f-string.
@@ -64,6 +64,8 @@ class Playlist:
             if an error occurs during the upload process, it prints and error 
                 message.
         """
+        if self.new_data is None:
+            self.create_database()   
             
         try: 
             duration_seconds = int(duration.split(':')[0]) * 60 + \
@@ -92,6 +94,7 @@ class Playlist:
         
             
         updated_data = pd.concat([self.new_data, new_song_df],ignore_index=True)
+        updated_data = updated_data.convert_dtypes()
         updated_data['Release']= pd.to_datetime(updated_data['Release'])
         
             
