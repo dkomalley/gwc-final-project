@@ -351,7 +351,10 @@ def menu():
     print("1. Upload a song")
     print("2. Delete a song")
     print("3. Play a song")
-    print("4. Turn off IPod")
+    print("4. Count songs per artist")
+    print("5. Print list of songs ordered by duration along with longest song \
+           and its length")
+    print("6. Turn off IPod")
 
 def upload_song_menu(playlist):
     """Asks the user to provide the details of the song they want to be added to
