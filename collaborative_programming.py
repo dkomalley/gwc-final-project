@@ -334,11 +334,11 @@ calculate_durations("songs.csv")
 
 def menu():
     """Displays menu options for the IPod."""
-    print("\nMenu:")
+    print("\nIPod Menu:")
     print("1. Upload a song")
     print("2. Delete a song")
     print("3. Play a song")
-    print("4. Exit")
+    print("4. Turn off IPod")
 
 def upload_song_menu(playlist):
     """Asks the user to provide the details of the song they want to be added to
@@ -394,7 +394,7 @@ def main():
         elif choice == "3":
             play_song_menu(music_library_manager)
         elif choice == "4":
-            print("Now exiting")
+            print("Ipod shutting down")
             break
         else:
             print("Invalid choice. Please choose a valid option.")
