@@ -314,7 +314,72 @@ def calculate_durations(filepath):
     return(f" List of song titles sorted by duration in descending order: {sorted_song_titles}. The longest song on this iPod is {sorted_song_titles[0]} and it is {longest_song} seconds long.") 
 calculate_durations("songs.csv")
 
+def menu():
+    """Displays menu options for the IPod."""
+    print("\nMenu:")
+    print("1. Upload a song")
+    print("2. Delete a song")
+    print("3. Play a song")
+    print("4. Exit")
 
+def upload_song_menu(playlist):
+    """Asks the user to provide the details of the song they want to be added to
+        the playlist.
+
+    Args:
+        playlist (Playlist): the playlist object to which the song will be added
+    """
+    song_title = input("Enter the title of the song: ")
+    artist = input("Enter the artist of the song: ")
+    genre = input("Enter the genre of the song: ")
+    duration = input("Enter the duration of the song (mm:ss): ")
+    release = input("Enter the release date of the song (YYYY-MM-DD): ")
+    playlist.upload_song(song_title, artist, genre, duration, release)
+
+def delete_song_menu(playlist):
+    """Asks the user to specify the title of the song they want to delete from
+        the playlist.
+
+    Args:
+        playlist (Playlist): the playlist object from which the song will be 
+            deleted.
+    """
+    song_title = input("Enter the title of the song to delete: ")
+    playlist.delete_songs(song_title)
+
+def play_song_menu(playlist):
+    """Asks the user to specify the title of the song they want to play from the
+        playlist.
+
+    Args:
+        playlist (Playlist): the playlist object from which the song will be 
+            played.
+    """
+    song_title = input("Enter the title of the song to be played: ")
+    print(playlist.play_song(song_title))
+
+def main():
+    parser = argparse.ArgumentParser(description="Manage your playlist.")
+    parser.add_argument("--filepath", default="songs2.csv", help="The path to the playlist CSV file.")
+    args = parser.parse_args()
+
+    music_library_manager = Playlist(args.filepath)
+
+    while True:
+        menu()
+        choice = input("Enter your choice (1-4): ")
+
+        if choice == "1":
+            upload_song_menu(music_library_manager)
+        elif choice == "2":
+            delete_song_menu(music_library_manager)
+        elif choice == "3":
+            play_song_menu(music_library_manager)
+        elif choice == "4":
+            print("Now exiting")
+            break
+        else:
+            print("Invalid choice. Please choose a valid option.")
 
 
 
