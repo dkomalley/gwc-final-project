@@ -394,6 +394,12 @@ def play_song_menu(playlist):
     song_title = input("Enter the title of the song to be played: ")
     print(playlist.play_song(song_title))
 
+def songs_per_artist_menu(playlist):
+    print(playlist.songs_per_artist())
+
+def calculate_durations_menu(playlist):
+    print(playlist.calculate_durations())
+
 def main():
     parser = argparse.ArgumentParser(description="Manage your playlist.")
     parser.add_argument("--filepath", default="songs.csv", help="The path to the playlist CSV file.")
@@ -413,7 +419,9 @@ def main():
             play_song_menu(music_library_manager)
         elif choice == "4":
             songs_per_artist_menu(music_library_manager)
-        elif choice == "4":
+        elif choice == "5":
+            calculate_durations_menu(music_library_manager)
+        elif choice == "6":
             print("Ipod shutting down")
             break
         else:
