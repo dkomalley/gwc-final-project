@@ -360,7 +360,7 @@ def play_song_menu(playlist):
 
 def main():
     parser = argparse.ArgumentParser(description="Manage your playlist.")
-    parser.add_argument("--filepath", default="songs2.csv", help="The path to the playlist CSV file.")
+    parser.add_argument("--filepath", default="songs.csv", help="The path to the playlist CSV file.")
     args = parser.parse_args()
 
     music_library_manager = Playlist(args.filepath)
