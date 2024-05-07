@@ -19,16 +19,16 @@ class Playlist:
         self.create_database()
         
     def __repr__(self):
-        """Returns the formal representation of the object in an f-string. """
+        """Returns the formal representation of the object in an f-string."""
         return f"Playlist({self.filepath},{self.now_playing_song},\
             {self.new_data})"
     
     def __getitem__(self, key):
-        """Returns the index of the now playing song in the music library. """
+        """Returns the index of the now playing song in the music library."""
         return self.new_data[key]
         
     def create_database(self):
-        """loads data from a CSV file into a DataFrame, and reads data from the
+        """Loads data from a CSV file into a DataFrame, and reads data from the
             CSV file specified by the `filepath` attribute and stores it in the
             `new_data` attribute.
 
@@ -283,10 +283,11 @@ def songs_per_artist(filepath):
     Counts the number of songs by each artiist stored on the iPod
 
     Args:
-    filepath(str): Path to CSV file containing information about each song.
+        filepath(str): Path to CSV file containing information about each song.
 
     Returns 
-    songs_artist_dict(dict): A dictionary where the keys are the artist and the values are the number of songs they have on the iPod.
+        songs_artist_dict(dict): A dictionary where the keys are the artist and 
+            the values are the number of songs they have on the iPod.
     """
 
     with open(filepath, "r", encoding = "utf-8") as f:
