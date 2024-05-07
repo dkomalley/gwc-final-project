@@ -278,73 +278,73 @@ class Playlist:
         
         return bar
                 
-def songs_per_artist(filepath):
-    """
-    Counts the number of songs by each artiist stored on the iPod
+    def songs_per_artist(self):
+        """
+        Counts the number of songs by each artiist stored on the iPod
 
-    Args:
-        filepath(str): Path to CSV file containing information about each song.
+        Args:
+            filepath(str): Path to CSV file containing information about each song.
 
-    Returns 
-        songs_artist_dict(dict): A dictionary where the keys are the artist and 
-            the values are the number of songs they have on the iPod.
-    """
+        Returns 
+            songs_artist_dict(dict): A dictionary where the keys are the artist and 
+                the values are the number of songs they have on the iPod.
+        """
 
-    with open(filepath, "r", encoding = "utf-8") as f:
-        #Skips header line
-        next(f)
-        #Use list comprehension to extract artist values from CSV file
-        artists = [line.strip().split(",") [1] for line in f]
+        with open(self.filepath, "r", encoding = "utf-8") as f:
+            #Skips header line
+            next(f)
+            #Use list comprehension to extract artist values from CSV file
+            artists = [line.strip().split(",") [1] for line in f]
 
-        #Counts the number of songs written by each artist downloaded on the iPod using a dictionary comprehension
+            #Counts the number of songs written by each artist downloaded on the iPod using a dictionary comprehension
 
-        songs_artist_dict = {artist: f"{artists.count(artist)} song/s." \
-        for artist in set(artists)}
+            songs_artist_dict = {artist: f"{artists.count(artist)} song/s." \
+            for artist in set(artists)}
 
-    return songs_artist_dict
-songs_per_artist("songs.csv")
-
-def calculate_durations(filepath):
-    """
-    Creates a list of all the songs on the iPod in order of their duration and 
-        also calculates the longest song with its length."
-
-    Args:
-        filepath (str): Path to csv file containing song information.
-
-    Returns: 
-        str: f string containing the list of song titles sorted by duration in 
-            descending order and the longest song with its length.
+        return songs_artist_dict
     
-    Side effects: 
-        modifies songs list by adding values from the csv file.
-    """
 
-    with open(filepath, "r", encoding = "utf-8") as f:
-            
-            songs = []
-            for line in f:
-                song_title, artist, genre, duration, release_date = line.strip().split(",")
-                if song_title == 'Title':
-                    continue
-                songs.append((song_title, artist, genre, duration, release_date ))
+    def calculate_durations(self):
+        """
+        Creates a list of all the songs on the iPod in order of their duration and 
+            also calculates the longest song with its length."
+
+        Args:
+            filepath (str): Path to csv file containing song information.
+
+        Returns: 
+            str: f string containing the list of song titles sorted by duration in 
+                descending order and the longest song with its length.
+        
+        Side effects: 
+            modifies songs list by adding values from the csv file.
+        """
+
+        with open(self.filepath, "r", encoding = "utf-8") as f:
                 
-#Sort songs in descending order by duration in seconds
-    sorted_by_duration = sorted(songs, reverse = True, key=lambda x: x[3])
+                songs = []
+                for line in f:
+                    song_title, artist, genre, duration, release_date = line.strip().split(",")
+                    if song_title == 'Title':
+                        continue
+                    songs.append((song_title, artist, genre, duration, release_date ))
+                    
+    #Sort songs in descending order by duration in seconds
+        sorted_by_duration = sorted(songs, reverse = True, key=lambda x: x[3])
 
 
-#Extract song titles
+    #Extract song titles
+        
+        sorted_song_titles = [song[0] for song in sorted_by_duration]
+
+    #Extract durations
+        song_durations = [duration[3] for duration in sorted_by_duration]
+    #Calculate longest song downloaded on iPod
+        longest_song = max(song_durations)
+
+
+        return(f" List of song titles sorted by duration in descending order: {sorted_song_titles}. The longest song on this iPod is {sorted_song_titles[0]} and it is {longest_song} seconds long.") 
     
-    sorted_song_titles = [song[0] for song in sorted_by_duration]
-
-#Extract durations
-    song_durations = [duration[3] for duration in sorted_by_duration]
-#Calculate longest song downloaded on iPod
-    longest_song = max(song_durations)
-
-
-    return(f" List of song titles sorted by duration in descending order: {sorted_song_titles}. The longest song on this iPod is {sorted_song_titles[0]} and it is {longest_song} seconds long.") 
-calculate_durations("songs.csv")
 
 def menu():
     """Displays menu options for the IPod."""
