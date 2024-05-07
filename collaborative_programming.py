@@ -309,9 +309,32 @@ def calculate_durations(filepath):
 calculate_durations("songs.csv")
 
 
+def check_playlist(filepath, song, favorite = False):
+    """Checks if a song is in the playlist/csv, and if it is a favorite song,
+    it is added to the frozenset that will keep it as the user's favorite song.
 
+    Args:
+        filepath (str): name of csv file.
+        song (str): name of song being checked.
+        favorite (bool, optional): whether the song is a favorite song or not. 
+        Defaults to False.
 
-                              
+    Returns:
+        str: f-string that prints if the song is in the playlist, if it is not,
+        it will say None is in the playlist.
+    """
+    check_set = set()
+    with open(filepath, "r", encoding = "utf-8") as f:
+        for line in f:
+            if song in line:
+                check_set.add(song)
+        if song not in line:
+            check_set = None   
+        if favorite == True:
+            favorites = frozenset({song})
+            print(favorites,"is an all time favorite!")
+    
+    return f"{check_set} is in the playlist."
 
 
 def parse_args(arglist):
