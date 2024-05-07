@@ -1,7 +1,7 @@
 import pandas as pd
 from datetime import datetime
 import csv
-import argparse 
+from argparse import ArgumentParser
 from random import shuffle
 from matplotlib import pyplot as plt
 
@@ -352,8 +352,8 @@ def menu():
     print("2. Delete a song")
     print("3. Play a song")
     print("4. Count songs per artist")
-    print("5. Print list of songs ordered by duration along with longest song \
-           and its length")
+    print("5. Print list of songs ordered by duration along with longest song\
+        and its length")
     print("6. Turn off IPod")
 
 def upload_song_menu(playlist):
@@ -404,11 +404,12 @@ def calculate_durations_menu(playlist):
     print(playlist.calculate_durations())
 
 def main():
-    parser = argparse.ArgumentParser(description="Manage your playlist.")
-    parser.add_argument("--filepath", default="songs.csv", help="The path to the playlist CSV file.")
+    parser = ArgumentParser(description="Manage your playlist.")
+    parser.add_argument("--playlist_path", default="songs.csv",\
+                            help="The path to the playlist CSV file.")
     args = parser.parse_args()
 
-    music_library_manager = Playlist(args.filepath)
+    music_library_manager = Playlist(args.playlist_path)
 
     while True:
         menu()
@@ -456,23 +457,6 @@ def check_playlist(filepath, song, favorite = False):
             print(favorites,"is an all time favorite!")
     
     return f"{check_set} is in the playlist."
-
-
-def parse_args(arglist):
-    parser = argparse.ArgumentParser(description="Deletes a song from a \
-        playlist.")
-    parser.add_argument("song_title", help="The title of the song to delete.")
-    parser.add_argument("--playlist_path", default="playlist.csv", \
-        help="The path to the playlist CSV file.")
-    args = parser.parse_args()
-
-    playlist_manager = Playlist(args.playlist_path)
-    updated_playlist = playlist_manager.delete_songs(args.song_title)
-
-    print(f"Updated playlist after deleting \"{args.song_title}\":")
-    for song in updated_playlist:
-        print(song)
-    return parser.parse_args(arglist)
 
 if __name__ == "__main__":
     main()
