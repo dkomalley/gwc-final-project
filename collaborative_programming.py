@@ -215,18 +215,16 @@ class Playlist:
         with open(self.filepath, mode='r', encoding='utf-8') as file:
             reader = csv.reader(file)
             for row in reader:
-                #Make sure when you are making the changes to your code that you skip over the first line
-                #bc it contains the name of the columns so liek 'Title', 'Artist', etc
-                # you can do this using this code:
-                #if row[0] == 'Title':
-                        #continue 
-                csv_song_title = row[0].strip().replace('“', '').replace('”', '').replace('"', '').lower()
-                input_song_title = song_title.strip().replace('“', '').replace('”', '').replace('"', '').lower()
+                csv_song_title = \
+                    row[0].strip().replace('“', '').replace('”', '')\
+                        .replace('"', '').lower()
+                input_song_title = song_title.strip().replace('“', '')\
+                    .replace('”', '').replace('"', '').lower()
                 if csv_song_title != input_song_title:
                     updated_playlist.append(row)
                 else:
                     song_found = True
-        #When returning data from this function, we maybe should only return whether or not the song was deleted
+        
         if song_found:
             print(f"'{song_title}' found and deleted.")
         else:
@@ -296,7 +294,8 @@ class Playlist:
             #Use list comprehension to extract artist values from CSV file
             artists = [line.strip().split(",") [1] for line in f]
 
-            #Counts the number of songs written by each artist downloaded on the iPod using a dictionary comprehension
+            #Counts the number of songs written by each artist downloaded on 
+            #the iPod using a dictionary comprehension
 
             songs_artist_dict = {artist: f"{artists.count(artist)} song/s." \
             for artist in set(artists)}
@@ -412,6 +411,8 @@ def main():
             delete_song_menu(music_library_manager)
         elif choice == "3":
             play_song_menu(music_library_manager)
+        elif choice == "4":
+            songs_per_artist_menu(music_library_manager)
         elif choice == "4":
             print("Ipod shutting down")
             break
