@@ -365,8 +365,8 @@ class Playlist:
 
 
         return(f" List of song titles sorted by duration in descending order: \
-            {sorted_song_titles}. The longest song on this iPod is \
-                {sorted_song_titles[0]} and it is {longest_song} seconds long.") 
+        {sorted_song_titles}. The longest song on this iPod is \
+        {sorted_song_titles[0]} and it is {longest_song} seconds long.") 
     
     def check_playlist(self, song, favorite = False):
         """Checks if a song is in the playlist/csv, and if it is a favorite 
