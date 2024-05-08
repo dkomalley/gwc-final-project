@@ -364,7 +364,8 @@ def menu():
     print("5. Print list of songs ordered by duration along with longest song"
         " and its length")
     print("6. View all songs")
-    print("7. Turn off IPod")
+    print("7. View your listening habits")
+    print("8. Turn off IPod")
 
 def upload_song_menu(playlist):
     """Asks the user to provide the details of the song they want to be added to
@@ -440,6 +441,15 @@ def songs_per_artist_menu(playlist):
 
 def calculate_durations_menu(playlist):
     print(playlist.calculate_durations())
+    
+def view_your_listening_habits_menu(playlist):
+    """Shows users their listening habits
+
+    Args:
+        playlist (Playlist): the playlist object from which the listening \
+            habits will be displayed
+    """
+    print(playlist.show_listening_habits())
 
 def main():
     parser = ArgumentParser(description="Manage your playlist.")
@@ -466,6 +476,8 @@ def main():
         elif choice == "6":
             view_all_songs_menu(music_library_manager)
         elif choice == "7":
+            view_your_listening_habits_menu(music_library_manager)
+        elif choice == "8":
             print("Ipod shutting down")
             break
         else:
