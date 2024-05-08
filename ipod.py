@@ -470,9 +470,11 @@ def view_all_songs_menu(playlist):
             print(f"Please choose from one of the given options")
 
 def songs_per_artist_menu(playlist):
+    """Helps call the songs_per_aritst method in the menu"""
     print(playlist.songs_per_artist())
 
 def calculate_durations_menu(playlist):
+    """Helps call the calculate_durations method in the menu"""
     print(playlist.calculate_durations())
     
 def view_your_listening_habits_menu(playlist):
