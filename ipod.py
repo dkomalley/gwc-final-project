@@ -14,6 +14,8 @@ class Playlist:
     """
     
     def __init__(self, filepath):
+        """Initializes the class attributes.
+        """
         self.filepath = filepath
         self.now_playing_song = {}
         self.create_database()
