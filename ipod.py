@@ -413,7 +413,6 @@ def upload_song_menu(playlist):
     genre = input("Enter the genre of the song: ")
     duration = input("Enter the duration of the song (mm:ss): ")
     release = input("Enter the release date of the song (YYYY-MM-DD): ")
-    playlist.upload_song(song_title, artist, genre, duration, release)
     
     if playlist.upload_song(song_title, artist, genre, duration, release):
         print(f"The song '{song_title}' was uploaded successfully.")
