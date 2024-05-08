@@ -3,7 +3,7 @@ from datetime import datetime
 import csv
 from argparse import ArgumentParser
 from random import shuffle
-from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt 
 
 """  A music library enabling users to manage songs, playlists, and perform 
         various functions using implemented code structures, supported by 
@@ -208,6 +208,9 @@ class Playlist:
         
         Returns:
             list: list of all songs on the playlist excluding the deleted songs
+        
+        Author: Elise Ferguson
+        Technique: f-strings with expressions
         """
         updated_playlist = []
         song_found = False
@@ -285,10 +288,12 @@ class Playlist:
         Counts the number of songs by each artist stored on the iPod
 
         Args:
-            filepath(str): Path to CSV file containing information about each song.
+            filepath(str): Path to CSV file containing information about each\
+                song.
 
         Returns: 
-            songs_artist_dict(dict): A dictionary where the keys are the artist and 
+            songs_artist_dict(dict): A dictionary where the keys are the artist\
+                  and 
                 the values are the number of songs they have on the iPod.
 
         Author: Charlotte Drew
@@ -312,14 +317,16 @@ class Playlist:
 
     def calculate_durations(self):
         """
-        Creates a list of all the songs on the iPod in order of their duration and 
+        Creates a list of all the songs on the iPod in order of their duration\
+              and 
             also calculates the longest song with its length."
 
         Args:
             filepath (str): Path to csv file containing song information.
 
         Returns: 
-            str: f string containing the list of song titles sorted by duration in 
+            str: f string containing the list of song titles sorted by duration\
+                in 
                 descending order and the longest song with its length.
         
         Side effects: 
@@ -524,6 +531,9 @@ def main():
         prints "Ipod shutting down" if option 10 is selected
         prints "Invalid choice. Please choose a valid option." if conditons are
         not met
+
+    Author: Elise Ferguson
+    Technique: ArgumentParser class
     """
     parser = ArgumentParser(description="Manage your playlist.")
     parser.add_argument("--playlist_path", default="songs.csv",\
