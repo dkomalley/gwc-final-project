@@ -355,6 +355,36 @@ class Playlist:
 
         return(f" List of song titles sorted by duration in descending order: {sorted_song_titles}. The longest song on this iPod is {sorted_song_titles[0]} and it is {longest_song} seconds long.") 
     
+    def check_playlist(self, song, favorite = False):
+        """Checks if a song is in the playlist/csv, and if it is a favorite song,
+        it is added to the frozenset that will keep it as the user's favorite song.
+
+        Args:
+            filepath (str): name of csv file.
+            song (str): name of song being checked.
+            favorite (bool, optional): whether the song is a favorite song or not. 
+            Defaults to False.
+
+        Returns:
+            str: f-string that prints if the song is in the playlist, if it is not,
+            it will say None is in the playlist.
+        """
+        check_set = set()
+        with open(self.filepath, "r", encoding = "utf-8") as f:
+            for line in f:
+                if 'Title' in line:
+                    continue
+                if song in line.strip().split(','):
+                    check_set.add(song)
+              
+            if favorite == True:
+                favorites = frozenset({song})
+                print(f"'{song}' is an all time favorite!")
+
+        if check_set == set():
+            return f"The song '{song}' is not in the playlist"
+        else:
+            return f"The song '{song}' is in the playlist."
 
 def menu():
     """Displays menu options for the IPod."""
@@ -462,14 +492,17 @@ def shuffle_songs_menu(playlist):
         playlist (Playlist): a playlist object that is being shuffled.
     """
     print(playlist.shuffle_songs())
-    
-def check_playlist_menu():
+        
+def check_playlist_menu(playlist):
     """Menu option for checking a song in a playlist.
+
+    Args:
+        playlist (Playlist): a playlist object from which a song will be \
+            checked
     """
-    filepath = input("Enter the filepath: ")
     song = input("Enter the song you want to check: ")
     favorite = input("Enter True if this song is your favorite, False if not: ")
-    print(check_playlist(filepath, song, favorite=False))
+    print(playlist.check_playlist(song, favorite=False))
 
 def main():
     parser = ArgumentParser(description="Manage your playlist.")
@@ -507,35 +540,6 @@ def main():
         else:
             print("Invalid choice. Please choose a valid option.")
 
-def check_playlist(filepath, song, favorite = False):
-    """Checks if a song is in the playlist/csv, and if it is a favorite song,
-    it is added to the frozenset that will keep it as the user's favorite song.
-
-    Args:
-        filepath (str): name of csv file.
-        song (str): name of song being checked.
-        favorite (bool, optional): whether the song is a favorite song or not. 
-        Defaults to False.
-
-    Returns:
-        str: f-string that prints if the song is in the playlist, if it is not,
-        it will say None is in the playlist.
-    
-    Author: Hailey Moore
-    Technique: Set operations and frozensets
-    """
-    check_set = set()
-    with open(filepath, "r", encoding = "utf-8") as f:
-        for line in f:
-            if song in line:
-                check_set.add(song)
-        if song not in line:
-            check_set = None   
-        if favorite == True:
-            favorites = frozenset({song})
-            print(favorites,"is an all time favorite!")
-    
-    return f"{check_set} is in the playlist."
 
 if __name__ == "__main__":
     main()
