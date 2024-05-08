@@ -404,7 +404,19 @@ class Playlist:
             return f"The song '{song}' is in the playlist."
 
 def menu():
-    """Displays menu options for the IPod."""
+    """Displays menu options for the IPod.
+    This function is adapted from 
+    https://gist.github.com/guestl/858e882a37442316fd7cdb0ca1b8e3a5 
+        (https://gist.github.com/guestl/858e882a37442316fd7cdb0ca1b8e3a5)
+
+    We used the print statements format and while loop from this code but made
+      it our own to fit our needs. However, in their example, their while loop 
+      is a bit more complex and has some extra steps than ours. We just used 
+      this as a basic pattern outline. We also defined functions to call from,
+        whereas in the source code we used they did not. 
+
+
+    """
     print("\nIPod Menu:")
     print("1. Upload a song")
     print("2. Delete a song")
