@@ -288,7 +288,7 @@ class Playlist:
                 the values are the number of songs they have on the iPod.
 
         Author: Charlotte Drew
-        Technique: List and doctionary comprehensions
+        Technique: List and dictionary comprehensions
         """
 
         with open(self.filepath, "r", encoding = "utf-8") as f:
