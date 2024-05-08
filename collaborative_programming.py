@@ -273,8 +273,10 @@ class Playlist:
         """
         group = self.new_data.groupby('Genre')['Duration'].sum()
         bar = group.plot.bar(x = 'Genre', y = 'Duration')
-        
-        return bar
+        plt.xlabel('Genre')
+        plt.ylabel('Duration')
+        plt.title('The Amount of Time Spent Listening to Each Genre')
+        return plt.show()
                 
     def songs_per_artist(self):
         """
