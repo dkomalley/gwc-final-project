@@ -278,14 +278,17 @@ class Playlist:
                 
     def songs_per_artist(self):
         """
-        Counts the number of songs by each artiist stored on the iPod
+        Counts the number of songs by each artist stored on the iPod
 
         Args:
             filepath(str): Path to CSV file containing information about each song.
 
-        Returns 
+        Returns: 
             songs_artist_dict(dict): A dictionary where the keys are the artist and 
                 the values are the number of songs they have on the iPod.
+
+        Author: Charlotte Drew
+        Technique: List and doctionary comprehensions
         """
 
         with open(self.filepath, "r", encoding = "utf-8") as f:
@@ -317,6 +320,12 @@ class Playlist:
         
         Side effects: 
             modifies songs list by adding values from the csv file.
+
+        Author: Charlotte Drew
+
+        Technique: Use of a key function with sorted
+
+
         """
 
         with open(self.filepath, "r", encoding = "utf-8") as f:
