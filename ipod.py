@@ -334,10 +334,12 @@ class Playlist:
                 
                 songs = []
                 for line in f:
-                    song_title, artist, genre, duration, release_date = line.strip().split(",")
+                    song_title, artist, genre, duration, release_date =\
+                        line.strip().split(",")
                     if song_title == 'Title':
                         continue
-                    songs.append((song_title, artist, genre, duration, release_date ))
+                    songs.append((song_title, artist, genre, duration, \
+                        release_date ))
                     
     #Sort songs in descending order by duration in seconds
         sorted_by_duration = sorted(songs, reverse = True, key=lambda x: x[3])
@@ -353,21 +355,27 @@ class Playlist:
         longest_song = max(song_durations)
 
 
-        return(f" List of song titles sorted by duration in descending order: {sorted_song_titles}. The longest song on this iPod is {sorted_song_titles[0]} and it is {longest_song} seconds long.") 
+        return(f" List of song titles sorted by duration in descending order: \
+            {sorted_song_titles}. The longest song on this iPod is \
+                {sorted_song_titles[0]} and it is {longest_song} seconds long.") 
     
     def check_playlist(self, song, favorite = False):
-        """Checks if a song is in the playlist/csv, and if it is a favorite song,
-        it is added to the frozenset that will keep it as the user's favorite song.
+        """Checks if a song is in the playlist/csv, and if it is a favorite 
+        song,it is added to the frozenset that will keep it as the user's 
+        favorite song.
 
         Args:
             filepath (str): name of csv file.
             song (str): name of song being checked.
-            favorite (bool, optional): whether the song is a favorite song or not. 
-            Defaults to False.
+            favorite (bool, optional): whether the song is a favorite song or 
+            not. Defaults to False.
 
         Returns:
-            str: f-string that prints if the song is in the playlist, if it is not,
-            it will say None is in the playlist.
+            str: f-string that prints if the song is in the playlist, if it 
+            is not, it will say None is in the playlist.
+            
+        Author: Hailey Moore
+        Techniques: Set operations and frozensets.
         """
         check_set = set()
         with open(self.filepath, "r", encoding = "utf-8") as f:
