@@ -516,6 +516,15 @@ def check_playlist_menu(playlist):
     print(playlist.check_playlist(song, favorite=False))
 
 def main():
+    """Parse command line argument and intializes the playlist manager. Also
+    displays a menu for the user to select the operation they want the iPod to
+    perform.
+    
+    Side effect:
+        prints "Ipod shutting down" if option 10 is selected
+        prints "Invalid choice. Please choose a valid option." if conditons are
+        not met
+    """
     parser = ArgumentParser(description="Manage your playlist.")
     parser.add_argument("--playlist_path", default="songs.csv",\
                             help="The path to the playlist CSV file.")
