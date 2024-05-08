@@ -23,9 +23,6 @@ class Playlist:
         return f"Playlist({self.filepath},{self.now_playing_song},\
             {self.new_data})"
     
-    def __getitem__(self, key):
-        """Returns the index of the now playing song in the music library."""
-        return self.new_data[key]
         
     def create_database(self):
         """Loads data from a CSV file into a DataFrame, and reads data from the
@@ -246,6 +243,9 @@ class Playlist:
             Returns:
                 list: returns a list of the songs in the filepath shuffled, 
                 using the shuffle function from the random module.
+            
+            Author: Hailey Moore
+            Techniques: With statements
             """
             shuffled_songs = []
             with open(self.filepath, "r", encoding = "utf-8") as f:
@@ -365,7 +365,9 @@ def menu():
         " and its length")
     print("6. View all songs")
     print("7. View your listening habits")
-    print("8. Turn off IPod")
+    print("8. Shuffle Songs")
+    print("9. Check for a song in the playlist")
+    print("10. Turn off IPod")
 
 def upload_song_menu(playlist):
     """Asks the user to provide the details of the song they want to be added to
@@ -451,6 +453,22 @@ def view_your_listening_habits_menu(playlist):
     """
     print(playlist.show_listening_habits())
 
+def shuffle_songs_menu(playlist):
+    """Menu option to call the shuffling songs function.
+
+    Args:
+        playlist (Playlist): a playlist object that is being shuffled.
+    """
+    print(playlist.shuffle_songs())
+    
+def check_playlist_menu():
+    """Menu option for checking a song in a playlist.
+    """
+    filepath = input("Enter the filepath: ")
+    song = input("Enter the song you want to check: ")
+    favorite = input("Enter True if this song is your favorite, False if not: ")
+    print(check_playlist(filepath, song, favorite=False))
+
 def main():
     parser = ArgumentParser(description="Manage your playlist.")
     parser.add_argument("--playlist_path", default="songs.csv",\
@@ -461,7 +479,7 @@ def main():
 
     while True:
         menu()
-        choice = input("Enter your choice (1-4): ")
+        choice = input("Enter your choice (1-10): ")
 
         if choice == "1":
             upload_song_menu(music_library_manager)
@@ -478,6 +496,10 @@ def main():
         elif choice == "7":
             view_your_listening_habits_menu(music_library_manager)
         elif choice == "8":
+            shuffle_songs_menu(music_library_manager)
+        elif choice == "9":
+            check_playlist_menu(music_library_manager)
+        elif choice == "10":
             print("Ipod shutting down")
             break
         else:
@@ -496,6 +518,9 @@ def check_playlist(filepath, song, favorite = False):
     Returns:
         str: f-string that prints if the song is in the playlist, if it is not,
         it will say None is in the playlist.
+    
+    Author: Hailey Moore
+    Technique: Set operations and frozensets
     """
     check_set = set()
     with open(filepath, "r", encoding = "utf-8") as f:
